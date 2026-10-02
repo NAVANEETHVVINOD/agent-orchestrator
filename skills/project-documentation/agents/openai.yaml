@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Documentation"
+  short_description: "Maintain accurate project docs and required entry files"
+  default_prompt: "Use $project-documentation for the assigned project stage."

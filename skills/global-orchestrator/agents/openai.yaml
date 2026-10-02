@@ -1,0 +1,4 @@
+interface:
+  display_name: "Global Orchestrator"
+  short_description: "Coordinate scoped project work through subagents"
+  default_prompt: "Use $global-orchestrator for the requested project task."

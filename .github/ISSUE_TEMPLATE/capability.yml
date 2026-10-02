@@ -1,0 +1,23 @@
+name: Capability or adapter request
+description: Propose an agent, skill, CLI or MCP integration for a concrete task
+title: "Capability: "
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Application and intended operations
+      description: State exact app/version/platform, desired outcome and existing tools.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Official interfaces and candidate source
+      description: Link API/SDK/source/license evidence. Do not paste secrets or account data.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Test scope and constraints
+      description: Describe read/write operations, intended host, approved data and real E2E acceptance criteria.

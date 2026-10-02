@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Release"
+  short_description: "Prepare CI/CD and verify evidence for release"
+  default_prompt: "Use $project-release for the assigned project stage."

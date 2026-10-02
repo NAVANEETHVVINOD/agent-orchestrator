@@ -1,0 +1,43 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "agent-orchestrator",
+  "version": "0.2.0",
+  "description": "Project planning, capability research and creation, optional retrieval and evidence-based delivery.",
+  "author": {
+    "name": "NAVANEETH"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "project planning",
+    "agent orchestration",
+    "quality assurance",
+    "security review",
+    "documentation"
+  ],
+  "extensions": {
+    "com.openai": {
+      "onboardingSkill": "./skills/global-orchestrator/SKILL.md",
+      "interface": {
+        "displayName": "AGENT ORCHESTRATOR",
+        "shortDescription": "Plan, build, review and test",
+        "longDescription": "Plan project requirements, architecture and UI/UX, coordinate scoped implementation, maintain documentation, and cycle through independent review, security, QA and fixes. Reuse task-relevant agents, skills, plugins and connected MCP tools exposed by the host. Research open-source alternatives, create missing agents/skills/MCP integrations and adopt selected reviewed capabilities within authorized scope. Optional RAG planning keeps knowledge project-isolated; optional Jev/Laya-style decision routing proposes bounded choices with uncertainty escalation. These workflows supply no hosted MCP/A2A/model service, credentials or automatic installation permissions. Actual execution and independent agents depend on the host. Required local E2E and current hosted CI remain evidence gates; model scores cannot authorize actions or certify safety.",
+        "developerName": "NAVANEETH",
+        "category": "Developer Tools",
+        "capabilities": [
+          "Project planning",
+          "Coordinated implementation",
+          "Quality review",
+          "Security review"
+        ],
+        "defaultPrompt": [
+          "Plan my project: ask focused requirements questions, then design its architecture and user experience.",
+          "Coordinate this feature using the available tools and agents, inspect outputs, and complete review and QA.",
+          "Review release readiness: verify current-source E2E evidence, vulnerabilities, documentation and CI."
+        ],
+        "brandColor": "#2458A6",
+        "composerIcon": "./assets/icon.svg",
+        "logo": "./assets/icon.svg"
+      }
+    }
+  }
+}

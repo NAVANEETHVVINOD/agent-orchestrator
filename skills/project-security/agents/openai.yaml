@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Security"
+  short_description: "Review trust boundaries and confirmed vulnerabilities"
+  default_prompt: "Use $project-security for the assigned project stage."

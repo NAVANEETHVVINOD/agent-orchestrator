@@ -1,0 +1,4 @@
+interface:
+  display_name: "Decision Routing"
+  short_description: "Evaluate bounded routes and escalate uncertain scores"
+  default_prompt: "Use $decision-routing for the requested project capability."

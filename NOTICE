@@ -1,0 +1,7 @@
+AGENT ORCHESTRATOR
+Copyright 2026 NAVANEETH
+Licensed under Apache License, Version 2.0.
+Original workflow text and Rust helpers; referenced frameworks are not bundled.
+CO_OP/co-op architecture patterns informed newly authored workflows. Reference
+snapshots and licensing limits are documented in docs/CO-OP-ADAPTATION.md.
+No reference application implementation is bundled.

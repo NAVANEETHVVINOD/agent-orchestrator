@@ -1,0 +1,8 @@
+{
+  "lock_sha256": "5513f425bad0d15379107657af34e5c1608b20c0c02a0feb0eed825af4dcceee",
+  "scan_date": "2026-10-03",
+  "packages_checked": 72,
+  "database": "OSV",
+  "limit": "Known database advisories only; not a complete security audit",
+  "findings": []
+}

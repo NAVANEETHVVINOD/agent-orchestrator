@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-03",
+  "environment": "Windows Rust1.94.1 Git",
+  "source_digest": "5bb15a98de4e1b7d0e173e41134694445cd709d44061814d42e78d9f5c695f57",
+  "checks": [
+    {
+      "command": "cargo fmt --check",
+      "status": "passed"
+    },
+    {
+      "command": "cargo clippy --locked --all-targets -- -D warnings",
+      "status": "passed"
+    },
+    {
+      "command": "cargo test --locked --lib --tests --target-dir <isolated target>",
+      "status": "passed",
+      "tests_passed": 21
+    },
+    {
+      "command": "cargo test --locked --release --lib --tests",
+      "status": "passed",
+      "tests_passed": 21
+    },
+    {
+      "command": "cargo build --locked --release",
+      "status": "passed"
+    },
+    {
+      "command": "release orchestrator validate-package --root .",
+      "status": "passed",
+      "skills": 14,
+      "profiles": 14
+    },
+    {
+      "command": "official manifest schema + Skill Creator checks",
+      "status": "passed",
+      "skills": 14
+    }
+  ],
+  "consumer_e2e": "Five real compiled CLI cases including actual Git fixtures; report fixture contents synthetic",
+  "unverified": [
+    "host installation",
+    "live RAG/model/MCP/A2A provider",
+    "OpenAI directory approval"
+  ],
+  "previous_failed_run": "Original Windows debug target LNK1104; clean isolated debug/release suites passed without disabled checks"
+}

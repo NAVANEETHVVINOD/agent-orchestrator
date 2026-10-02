@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Discovery"
+  short_description: "Clarify scope, requirements and key product decisions"
+  default_prompt: "Use $project-discovery for the assigned project stage."

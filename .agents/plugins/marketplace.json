@@ -1,0 +1,20 @@
+{
+  "name": "agent-orchestrator-local",
+  "interface": {
+    "displayName": "AGENT ORCHESTRATOR \u2014 Local"
+  },
+  "plugins": [
+    {
+      "name": "agent-orchestrator",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

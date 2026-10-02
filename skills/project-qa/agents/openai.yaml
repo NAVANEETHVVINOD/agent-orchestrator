@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project QA"
+  short_description: "Run actual project checks and end-to-end journeys"
+  default_prompt: "Use $project-qa for the assigned project stage."

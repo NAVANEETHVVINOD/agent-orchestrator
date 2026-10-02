@@ -1,0 +1,4 @@
+interface:
+  display_name: "Integration Builder"
+  short_description: "Build tested CLI and MCP adapters for applications"
+  default_prompt: "Use $integration-builder to assess and build the requested application adapter."

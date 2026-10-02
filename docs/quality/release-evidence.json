@@ -1,0 +1,62 @@
+{
+  "format_version": 1,
+  "source_digest": "5bb15a98de4e1b7d0e173e41134694445cd709d44061814d42e78d9f5c695f57",
+  "checks": [
+    {
+      "id": "build",
+      "kind": "build",
+      "required": true,
+      "status": "passed",
+      "source_digest": "5bb15a98de4e1b7d0e173e41134694445cd709d44061814d42e78d9f5c695f57",
+      "evidence": "docs/quality/local-checks.json",
+      "evidence_sha256": "89492979f0b36e6706500a1995cc3b1c80cd267bd739fbd6a611c7c8a1c37364"
+    },
+    {
+      "id": "e2e",
+      "kind": "e2e",
+      "required": true,
+      "status": "passed",
+      "source_digest": "5bb15a98de4e1b7d0e173e41134694445cd709d44061814d42e78d9f5c695f57",
+      "evidence": "docs/quality/local-checks.json",
+      "evidence_sha256": "89492979f0b36e6706500a1995cc3b1c80cd267bd739fbd6a611c7c8a1c37364"
+    },
+    {
+      "id": "code-review",
+      "kind": "code-review",
+      "required": true,
+      "status": "passed",
+      "source_digest": "5bb15a98de4e1b7d0e173e41134694445cd709d44061814d42e78d9f5c695f57",
+      "evidence": "docs/quality/source-review.md",
+      "evidence_sha256": "ab713664db660fe09a619f81b07818266ed9110ea5aae67b5e697df5cd1efb89"
+    },
+    {
+      "id": "security-review",
+      "kind": "security-review",
+      "required": true,
+      "status": "passed",
+      "source_digest": "5bb15a98de4e1b7d0e173e41134694445cd709d44061814d42e78d9f5c695f57",
+      "evidence": "docs/quality/source-review.md",
+      "evidence_sha256": "ab713664db660fe09a619f81b07818266ed9110ea5aae67b5e697df5cd1efb89"
+    },
+    {
+      "id": "evidence-review",
+      "kind": "evidence-review",
+      "required": true,
+      "status": "passed",
+      "source_digest": "5bb15a98de4e1b7d0e173e41134694445cd709d44061814d42e78d9f5c695f57",
+      "evidence": "docs/quality/source-review.md",
+      "evidence_sha256": "ab713664db660fe09a619f81b07818266ed9110ea5aae67b5e697df5cd1efb89"
+    },
+    {
+      "id": "docs-review",
+      "kind": "docs-review",
+      "required": true,
+      "status": "passed",
+      "source_digest": "5bb15a98de4e1b7d0e173e41134694445cd709d44061814d42e78d9f5c695f57",
+      "evidence": "docs/quality/source-review.md",
+      "evidence_sha256": "ab713664db660fe09a619f81b07818266ed9110ea5aae67b5e697df5cd1efb89"
+    }
+  ],
+  "blocking_findings": [],
+  "unresolved_decisions": []
+}
