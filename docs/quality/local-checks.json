@@ -1,7 +1,7 @@
 {
   "date": "2026-10-03",
   "environment": "Windows Rust1.94.1 Git",
-  "source_digest": "5bb15a98de4e1b7d0e173e41134694445cd709d44061814d42e78d9f5c695f57",
+  "source_digest": "591769397b842d9543746624dd8e38ae9be93aee36e625d905374da74cc1ab65",
   "checks": [
     {
       "command": "cargo fmt --check",
