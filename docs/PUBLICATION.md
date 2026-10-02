@@ -2,15 +2,20 @@
 
 The package uses the portable Agent Plugins 1.0.0 root manifest, publisher NAVANEETH,
 display name AGENT ORCHESTRATOR and Apache-2.0 license. No fake public repo, contact,
-website, approval or endpoint has been inserted. A source repository can be added once
-the intended GitHub owner/repository is supplied.
+website, approval or endpoint has been inserted. The public source repository is
+[NAVANEETHVVINOD/agent-orchestrator](https://github.com/NAVANEETHVVINOD/agent-orchestrator).
 
 ## Open-source distribution
-Publish this source to the chosen GitHub repository with its LICENSE/NOTICE and docs,
-then provide a versioned ZIP or a pinned Git marketplace source. Local/repo distribution
-and universal public-directory publication are different routes. GitHub Actions are
-included for package validation/tests; remote checks/branch rules are unverified until
-the chosen repository exists and actual runs are inspected.
+The implementation, LICENSE/NOTICE and docs are available in
+[PR #4](https://github.com/NAVANEETHVVINOD/agent-orchestrator/pull/4) and its
+codex/initial-plugin branch, with a versioned 0.3.0 source ZIP prepared locally.
+Local/repo distribution and universal public-directory publication are different routes.
+Windows/Linux validation, tests and optimized CLI E2E passed on implementation head
+fdaf15667ff0e8745ee7c2694f0529d5d1728b20 in the
+[PR run](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37061332784).
+Protection requires final-gate, one approving GitHub review and resolved conversations,
+including for administrators. Automatic merge is enabled; an approving GitHub review
+remains required. Later revisions must verify their own actual checks before merge.
 
 ## Universal ChatGPT/Codex directory
 1. Complete individual/business verification and choose the verified developer identity.
@@ -39,4 +44,5 @@ schema check. No submission or publication action has occurred in this package b
 Version 0.2.0 adds instructions for project-specific MCP creation and optional knowledge/
 decision integrations; it remains a skills-only package with no bundled MCP service.
 Creating a user's project integration is separate from adding a hosted MCP app to this
-public listing. Plan that edition before submission if a managed service is intended.
+public listing. Version 0.3.0 adds a local Rust planning kernel and stronger cross-platform
+CI; it remains skills-only. Plan a managed-service edition before its submission if wanted.
