@@ -1,0 +1,4 @@
+{
+  "format_version": 1, "project_id": "synthetic-example", "revision": 0,
+  "free_worker_slots": 1, "available_capabilities": ["native-builder"], "active_tasks": []
+}

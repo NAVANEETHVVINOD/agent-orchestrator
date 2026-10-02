@@ -1,5 +1,13 @@
 # Changes
 
+## 0.3.0 — 3 October 2026
+Adds a stateless Rust task-planning kernel: dependency validation, bounded work-wave
+proposals, scope conflicts, escaped charts and revision-checked review/correction
+transitions. The host performs actual execution, identity and evidence verification.
+CI adds Windows/Linux matrices and optimized real CLI E2E as a required final-gate
+dependency. Product direction and unresolved hosted/UI/provider choices are explicit.
+No new provider, installer, network listener or telemetry is introduced.
+
 ## 0.2.0 — 3 October 2026
 Added capability-manager, project-knowledge and decision-routing skills; optional
 read-only capability_researcher profile; project-scoped acquisition/creation lifecycle;

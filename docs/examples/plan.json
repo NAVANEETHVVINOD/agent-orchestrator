@@ -1,0 +1,15 @@
+{
+  "format_version": 1,
+  "project_id": "synthetic-example",
+  "revision": 0,
+  "filesystem_case": "insensitive",
+  "decisions": [{"id": "requirements", "status": "resolved"}],
+  "capabilities": [{"id": "native-builder", "kind": "native-agent"}],
+  "tasks": [{
+    "id": "build", "title": "Synthetic planning example", "owner": "builder",
+    "kind": "implementation", "status": "planned", "depends_on": [],
+    "capabilities": ["native-builder"], "requires_decisions": ["requirements"],
+    "reads": [], "writes": ["src/example"], "source_revision": "example-source-1",
+    "required_checks": ["qa"], "checks": [], "findings": [], "artifacts": [], "review": null
+  }]
+}

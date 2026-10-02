@@ -199,3 +199,135 @@ fn unknown_duplicate_and_invalid_stage_arguments_block() {
         blocked(run(&args));
     }
 }
+
+#[test]
+fn planning_cli_actual_work_review_fix_acceptance_journey() {
+    let f = Fixture::new();
+    let input = f.0.join("plan.json");
+    let runtime = f.0.join("runtime.json");
+    let event = f.0.join("event.json");
+    let mut plan: Value = serde_json::from_str(include_str!("../docs/examples/plan.json")).unwrap();
+    let state: Value = serde_json::from_str(include_str!("../docs/examples/runtime.json")).unwrap();
+    fs::write(&input, plan.to_string()).unwrap();
+    fs::write(&runtime, state.to_string()).unwrap();
+    let summary = success(run(&["validate-plan", "--input", input.to_str().unwrap()]));
+    assert_eq!(summary["reported_evidence_verified"], false);
+    let wave = success(run(&[
+        "next-wave",
+        "--input",
+        input.to_str().unwrap(),
+        "--runtime",
+        runtime.to_str().unwrap(),
+    ]));
+    assert_eq!(wave["selected_tasks"], json!(["build"]));
+    assert_eq!(wave["execution_performed"], false);
+    plan["tasks"][0]["title"] = json!("Build | <script>\n[unsafe](https://invalid.example)");
+    fs::write(&input, plan.to_string()).unwrap();
+    let chart = run(&["render-chart", "--input", input.to_str().unwrap()]);
+    assert!(chart.status.success());
+    let chart = String::from_utf8(chart.stdout).unwrap();
+    assert!(chart.contains("&#124;") && chart.contains("&lt;script&gt;"));
+    assert!(!chart.contains("<script>") && !chart.contains("[unsafe]"));
+    assert_eq!(
+        chart.lines().filter(|line| line.starts_with('|')).count(),
+        3
+    );
+
+    for (from, to, actor) in [
+        ("planned", "running", "coordinator"),
+        ("running", "review", "builder"),
+        ("review", "needs-fix", "reviewer"),
+        ("needs-fix", "running", "coordinator"),
+        ("running", "review", "builder"),
+        ("review", "accepted", "reviewer"),
+    ] {
+        let mut update = json!({"format_version":1,"project_id":plan["project_id"],
+            "expected_revision":plan["revision"],"task_id":"build","actor":actor,"from":from,"to":to});
+        if to == "needs-fix" {
+            update["findings"] = json!(["Synthetic review finding"]);
+        }
+        if from == "needs-fix" {
+            update["source_revision"] = json!("example-source-2");
+            update["findings"] = json!([]);
+        }
+        if to == "review" {
+            update["checks"] = json!([{"id":"qa","status":"passed","source_revision":plan["tasks"][0]["source_revision"]}]);
+            update["artifacts"] = json!(["docs/quality/synthetic.txt"]);
+        }
+        if to == "accepted" {
+            update["review"] = json!({"actor":"reviewer","status":"passed","source_revision":plan["tasks"][0]["source_revision"]});
+            let mut skipped = update.clone();
+            skipped["checks"] = json!([{"id":"qa","status":"skipped","source_revision":plan["tasks"][0]["source_revision"]}]);
+            fs::write(&event, skipped.to_string()).unwrap();
+            blocked(run(&[
+                "apply-transition",
+                "--input",
+                input.to_str().unwrap(),
+                "--event",
+                event.to_str().unwrap(),
+            ]));
+        }
+        fs::write(&event, update.to_string()).unwrap();
+        let result = success(run(&[
+            "apply-transition",
+            "--input",
+            input.to_str().unwrap(),
+            "--event",
+            event.to_str().unwrap(),
+        ]));
+        assert_eq!(result["external_action_authorized"], false);
+        assert_eq!(result["reported_evidence_verified"], false);
+        plan = result["plan"].clone();
+        fs::write(&input, plan.to_string()).unwrap();
+        blocked(run(&[
+            "apply-transition",
+            "--input",
+            input.to_str().unwrap(),
+            "--event",
+            event.to_str().unwrap(),
+        ]));
+    }
+    assert_eq!(plan["revision"], 6);
+    assert_eq!(plan["tasks"][0]["status"], "accepted");
+    success(run(&["validate-plan", "--input", input.to_str().unwrap()]));
+    assert_eq!(
+        serde_json::from_slice::<Value>(&fs::read(&input).unwrap()).unwrap(),
+        plan
+    );
+}
+
+#[test]
+fn planning_cli_blocks_bad_graph_runtime_and_bounded_json() {
+    let f = Fixture::new();
+    let input = f.0.join("plan.json");
+    let runtime = f.0.join("runtime.json");
+    let original: Value = serde_json::from_str(include_str!("../docs/examples/plan.json")).unwrap();
+    let mut cycle = original.clone();
+    cycle["tasks"][0]["depends_on"] = json!(["build"]);
+    fs::write(&input, cycle.to_string()).unwrap();
+    blocked(run(&["validate-plan", "--input", input.to_str().unwrap()]));
+    fs::write(&input, original.to_string()).unwrap();
+    let mut state: Value =
+        serde_json::from_str(include_str!("../docs/examples/runtime.json")).unwrap();
+    for field in ["available_capabilities", "active_tasks"] {
+        state[field] = json!(["unknown"]);
+        fs::write(&runtime, state.to_string()).unwrap();
+        blocked(run(&[
+            "next-wave",
+            "--input",
+            input.to_str().unwrap(),
+            "--runtime",
+            runtime.to_str().unwrap(),
+        ]));
+        state[field] = json!([]);
+    }
+    for text in [
+        r#"{"format_version":1,"format_version":1}"#,
+        r#"{"unused":NaN}"#,
+    ] {
+        fs::write(&input, text).unwrap();
+        blocked(run(&["validate-plan", "--input", input.to_str().unwrap()]));
+    }
+    fs::write(&input, vec![b' '; 1024 * 1024 + 1]).unwrap();
+    blocked(run(&["validate-plan", "--input", input.to_str().unwrap()]));
+}

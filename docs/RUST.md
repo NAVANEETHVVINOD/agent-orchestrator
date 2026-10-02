@@ -20,8 +20,14 @@ orchestrator validate-package --root /path/to/agent-orchestrator
 orchestrator project-gate --project-root /path/to/repository --snapshot
 orchestrator project-gate --project-root /path/to/repository --report docs/quality/release-evidence.json --stage pre-push
 orchestrator route-proposal --input /path/to/proposal.json
+orchestrator validate-plan --input /path/to/plan.json
+orchestrator next-wave --input /path/to/plan.json --runtime /path/to/runtime.json
+orchestrator render-chart --input /path/to/plan.json
+orchestrator apply-transition --input /path/to/plan.json --event /path/to/event.json
 ```
 
+The [planning kernel](PLANNING-KERNEL.md) validates recorded dependencies and proposes
+bounded work waves; transitions emit updated JSON to stdout, without writing files.
 Validation and routing read files; project-gate also runs fixed read-only Git commands.
 None installs tools, runs tests, changes source, starts a service or supplies external
 action authorization. Failed validation exits with status 1 and sanitized JSON errors.

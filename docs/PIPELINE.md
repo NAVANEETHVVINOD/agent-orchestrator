@@ -30,6 +30,11 @@ Each substantial feature receives stable requirement IDs, task IDs and matching 
 or review evidence. The ledger links requirement -> owned change -> verification ->
 remaining finding -> next action. Review the integrated application as well as parts.
 
+The optional [Rust planning kernel](PLANNING-KERNEL.md) can validate a versioned
+project plan, propose bounded work waves, render its chart and apply reported
+transitions. The coordinator supplies actual runtime capacity and capabilities,
+dispatches through the host and verifies outputs. The kernel does not run the lifecycle.
+
 Before production implementation, ask the human about unresolved choices that affect
 product scope, security/data handling, UX or meaningful cost. Present a concrete
 recommended option and alternatives. Draft bounded plans/wireframes while answers

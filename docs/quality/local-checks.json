@@ -1,47 +1,52 @@
 {
   "date": "2026-10-03",
   "environment": "Windows Rust1.94.1 Git",
-  "source_digest": "591769397b842d9543746624dd8e38ae9be93aee36e625d905374da74cc1ab65",
+  "source_digest": "a3a1a20228cee71705859dc08a2ae01d1f96f56ac5cf6ff1e1fab2ae6239dee6",
   "checks": [
     {
       "command": "cargo fmt --check",
       "status": "passed"
     },
     {
-      "command": "cargo clippy --locked --all-targets -- -D warnings",
+      "command": "cargo clippy --locked --all-targets --target-dir <isolated> -- -D warnings",
       "status": "passed"
     },
     {
-      "command": "cargo test --locked --lib --tests --target-dir <isolated target>",
+      "command": "cargo test --locked --lib --tests --target-dir <isolated>",
       "status": "passed",
-      "tests_passed": 21
+      "tests_passed": 39,
+      "failed": 0,
+      "ignored": 0
     },
     {
       "command": "cargo test --locked --release --lib --tests",
       "status": "passed",
-      "tests_passed": 21
+      "tests_passed": 39,
+      "failed": 0,
+      "ignored": 0
     },
     {
       "command": "cargo build --locked --release",
       "status": "passed"
     },
     {
-      "command": "release orchestrator validate-package --root .",
+      "command": "release validate-package --root .",
       "status": "passed",
       "skills": 14,
       "profiles": 14
     },
     {
-      "command": "official manifest schema + Skill Creator checks",
+      "command": "official schema, Skill Creator quick checks, UI YAML parsing",
       "status": "passed",
-      "skills": 14
+      "skills": 14,
+      "ui_records": 14
     }
   ],
-  "consumer_e2e": "Five real compiled CLI cases including actual Git fixtures; report fixture contents synthetic",
+  "consumer_e2e": "Seven actual compiled CLI consumers; Git/planning reported-evidence fixtures explicitly synthetic",
   "unverified": [
-    "host installation",
-    "live RAG/model/MCP/A2A provider",
-    "OpenAI directory approval"
-  ],
-  "previous_failed_run": "Original Windows debug target LNK1104; clean isolated debug/release suites passed without disabled checks"
+    "host plugin installation/discovery",
+    "live target adapters/RAG/models/MCP/A2A",
+    "directory approval",
+    "current hosted CI before push"
+  ]
 }

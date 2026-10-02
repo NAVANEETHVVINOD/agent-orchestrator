@@ -115,6 +115,14 @@ does not authorize a reply to a separate chat. Respect external messaging bounda
 
 ## Inspect results and choose next steps
 
+When the optional Rust planning CLI is actually available, use validate-plan to check
+the project task graph, next-wave with a fresh explicit runtime snapshot to propose
+bounded nonconflicting work, render-chart for the ledger, and apply-transition for
+revision-checked recorded review/correction changes. Follow the plugin's planning
+contract; structural claims remain unverified until you inspect actual host outputs.
+The CLI neither spawns agents nor grants action authority. Native orchestration can
+continue without the optional helper; never invent a callable command or connection.
+
 For substantial coordinated work, keep a compact task/status chart in the conversation
 or one agreed local ledger. Record owner, dependencies, state, evidence/output reference,
 review/QA result and next action. Read [references/task-ledger.md](references/task-ledger.md)

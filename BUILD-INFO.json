@@ -1,11 +1,11 @@
 {
   "name": "agent-orchestrator",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "NAVANEETH",
   "license": "Apache-2.0",
   "validation_date": "2026-10-03",
   "rust_version": "1.94.1",
-  "local_tests_passed": 21,
+  "local_tests_passed": 39,
   "local_consumer_cli_e2e": "passed",
   "independent_source_review": "passed",
   "host_install_verified": false,
@@ -42,7 +42,7 @@
     },
     {
       "path": ".github/workflows/package-ci.yml",
-      "sha256": "7edc7c6b995ae65e1ada9a5b5eeade20cd9b89dc14a74bcee0902fce352ac8be"
+      "sha256": "0417cffa54cb3b19f6ac71822a7aa4e9f9d91c707d6783a782b0f94874fffce9"
     },
     {
       "path": ".gitignore",
@@ -114,11 +114,11 @@
     },
     {
       "path": "Cargo.lock",
-      "sha256": "5513f425bad0d15379107657af34e5c1608b20c0c02a0feb0eed825af4dcceee"
+      "sha256": "6866ed8e7c0c9e5565f49cfc40110d311f2af51212a9ce3aafdae139bbaba3c8"
     },
     {
       "path": "Cargo.toml",
-      "sha256": "ef266d42166af62791b2141ceef802ad136e49b78ba1966ec683393d62dec7e9"
+      "sha256": "9137d31fc2bf56b9c80beab4e7061da71aeefacb5321ad91cac214a80d52f79c"
     },
     {
       "path": "docs/APPLICATION-ADAPTERS.md",
@@ -134,7 +134,7 @@
     },
     {
       "path": "docs/CHANGELOG.md",
-      "sha256": "90fb2c4b14f9b38c93d9e5504bc1d4d0ce295baf1c290ca6cbd86fd6e1798665"
+      "sha256": "055c9b81f3840c45b27fabf70f9cda19deaaf0caae94d61f6611b50956e8f45f"
     },
     {
       "path": "docs/CO-OP-ADAPTATION.md",
@@ -143,6 +143,18 @@
     {
       "path": "docs/CONTRIBUTING.md",
       "sha256": "f022b86d7f5d50efc8bb86d9cfd53f45fd75b6e99b45ac8be33416ee768b2696"
+    },
+    {
+      "path": "docs/examples/plan.json",
+      "sha256": "154863cce266dbbea881bb30768e58b55eb7b3bc0ebc0c6886fc54d6c501ff43"
+    },
+    {
+      "path": "docs/examples/runtime.json",
+      "sha256": "31b94e8e3373db6b1209518b51f28a6ce47d37817d0043883f2c2feeffdb4b04"
+    },
+    {
+      "path": "docs/examples/start.json",
+      "sha256": "3ce55df2c531f995d11bcd91bc4bf5ead215358393779ce3f313959cdff4f9f4"
     },
     {
       "path": "docs/INSTALL.md",
@@ -162,7 +174,15 @@
     },
     {
       "path": "docs/PIPELINE.md",
-      "sha256": "1fd0a02150132d104fa477a75a38853525dfa07751dc4bb3b6eaaf66db981aad"
+      "sha256": "129fc406df0834ab4e563739db7c2144c29cf9ec93600dc3f13ef0346538a2e8"
+    },
+    {
+      "path": "docs/PLANNING-KERNEL.md",
+      "sha256": "6e7f1864cf1a44a2649fa528d8e2c4342a1e9a321c90d21b38a63ea080a46d04"
+    },
+    {
+      "path": "docs/PRODUCT.md",
+      "sha256": "e34608ec5da00be2a625b30c95ace1a69bbc1a26d801a8cddf6dd0fb5572157a"
     },
     {
       "path": "docs/PUBLICATION.md",
@@ -170,7 +190,7 @@
     },
     {
       "path": "docs/README.md",
-      "sha256": "4819675d0320cfd6f169f6a7f5737f9ada5ca0fccbf2036a97b65194f68e0d4e"
+      "sha256": "0c052688aa5892ccf5bc225cfc53ec53372d5e441ee9e1340ae2a4d561b94cd3"
     },
     {
       "path": "docs/RESEARCH.md",
@@ -182,7 +202,7 @@
     },
     {
       "path": "docs/RUST.md",
-      "sha256": "a1f8b6ac053d72985639e39d81068b1d7a4ea35834b78a2bd9dbea41278613bb"
+      "sha256": "d33b844b2d924d8bb801e9f8d7cba04cff26dcaa872f8a5c99dc78e9f4a4576a"
     },
     {
       "path": "docs/SECURITY.md",
@@ -194,7 +214,7 @@
     },
     {
       "path": "docs/VALIDATION.md",
-      "sha256": "61d8de3d96b003c8081b9a7bc3d7921a02dcacf0f11c6e3520c95f829c79ae3f"
+      "sha256": "c73ef40bff7732df4414d37c92e31a0e84503a6a61ed4aedc05306bf4ee77f9a"
     },
     {
       "path": "LICENSE",
@@ -206,7 +226,7 @@
     },
     {
       "path": "plugin.json",
-      "sha256": "b56f7f45429eafece0cf06a065b407074e8d9c4c35f292bb9c6487d4fd033f1e"
+      "sha256": "bc365975baa05addc48a752c5b5e71d682387931eef9ec68a8d56d17315343f3"
     },
     {
       "path": "README.md",
@@ -286,7 +306,7 @@
     },
     {
       "path": "skills/global-orchestrator/SKILL.md",
-      "sha256": "36efbe64215c264dc1f8d5c623e7d63f8bde174bfcd8e0dfc423cbceab3416a5"
+      "sha256": "d268a4a71d82df87ee4408cefefbc0ad02c0d94ef534754fc58e5beeef509bfc"
     },
     {
       "path": "skills/integration-builder/agents/openai.yaml",
@@ -382,15 +402,19 @@
     },
     {
       "path": "src/lib.rs",
-      "sha256": "57239ae99c7f663dba9812087f281b8e5dfab0de4788fc0921ebbd06e331956b"
+      "sha256": "5b40a551c9255358804e86b922c98c2291a64368ecee676472b11b841a6668b3"
     },
     {
       "path": "src/main.rs",
-      "sha256": "5b48ce3cb6a777b3ca1db52fc30956c76ca25c0f95e30d7ba475c2411726b109"
+      "sha256": "86b25f393009ad309715fa2427d542687ac21a724b92c64b2be903308f88237c"
     },
     {
       "path": "src/package.rs",
       "sha256": "51ab50359e2ba53be50cda70873603f356e87a36f13d6f5f3dfd23c7554b1d50"
+    },
+    {
+      "path": "src/planning.rs",
+      "sha256": "7914d656425bd24c22c9e4e114590cfd73aa76ea568a3a676f80876aa6ebc7ad"
     },
     {
       "path": "src/routing.rs",
@@ -402,11 +426,15 @@
     },
     {
       "path": "tests/cli.rs",
-      "sha256": "e16c6db200e5c686dec6e5c405fd2e92312901d4bf06243f0e8dc6d03c38eeb7"
+      "sha256": "3d1eef744845b8d9675f14d0ea3c4966d10dfc0439b8e3c767a83ad46dec05cd"
     },
     {
       "path": "tests/gate.rs",
       "sha256": "abb9a947ef8fc14dd66b0b79563f2aaae49c7b05aa499f723fb661138fa83dee"
+    },
+    {
+      "path": "tests/planning.rs",
+      "sha256": "91b2b5969cf27d95bd23ce553465a3181c778a0ec64b44f5b33dc236d98225e5"
     }
   ]
 }

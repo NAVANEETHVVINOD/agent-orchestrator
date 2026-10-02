@@ -1,7 +1,7 @@
 # Documentation index
 
 AGENT ORCHESTRATOR is a skills-only plugin authored by NAVANEETH under Apache-2.0.
-Version 0.2.0 is an open-source package. OpenAI directory approval is separate.
+Version 0.3.0 is an open-source package. OpenAI directory approval is separate.
 
 - [Install and use](INSTALL.md)
 - [Project onboarding and existing tools](USER-GUIDE.md)
@@ -16,6 +16,8 @@ Version 0.2.0 is an open-source package. OpenAI directory approval is separate.
 - [Validation evidence](VALIDATION.md)
 - [Research and attribution](RESEARCH.md)
 - [Rust helpers](RUST.md)
+- [Product direction](PRODUCT.md)
+- [Task-planning kernel](PLANNING-KERNEL.md)
 - [CO_OP analysis and adaptation](CO-OP-ADAPTATION.md)
 - [Application adapters](APPLICATION-ADAPTERS.md)
 - [Business operations](../skills/business-operations/SKILL.md)

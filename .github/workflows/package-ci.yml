@@ -7,7 +7,11 @@ permissions:
   contents: read
 jobs:
   validate:
-    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -18,7 +22,11 @@ jobs:
       - run: cargo +1.94.1 clippy --locked --all-targets -- -D warnings
       - run: cargo +1.94.1 run --locked -- validate-package --root .
   test:
-    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -27,14 +35,30 @@ jobs:
       - run: rustup toolchain install 1.94.1 --profile minimal
       - run: cargo +1.94.1 test --locked --lib --tests
       - run: cargo +1.94.1 build --locked --release
+  e2e:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: rustup toolchain install 1.94.1 --profile minimal
+      - run: cargo +1.94.1 test --locked --release --test cli
+      - run: cargo +1.94.1 run --locked --release -- validate-package --root .
   final-gate:
     if: always()
-    needs: [validate, test]
+    needs: [validate, test, e2e]
     runs-on: ubuntu-24.04
     steps:
       - env:
           VALIDATE_RESULT: ${{ needs.validate.result }}
           TEST_RESULT: ${{ needs.test.result }}
+          E2E_RESULT: ${{ needs.e2e.result }}
         run: |
           test "$VALIDATE_RESULT" = success
           test "$TEST_RESULT" = success
+          test "$E2E_RESULT" = success

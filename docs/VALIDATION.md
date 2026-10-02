@@ -1,40 +1,52 @@
 # Validation evidence
 
-Current local validation: Windows, Rust 1.94.1, Git, 3 October 2026.
+Version 0.3.0 local validation: Windows, Rust 1.94.1, Git, 3 October 2026.
 
 | Check | Observed result | Scope / limit |
 | --- | --- | --- |
 | cargo fmt --check | Passed | Current Rust source |
-| cargo clippy --locked --all-targets -- -D warnings | Passed | Current source and tests |
-| cargo test --locked --lib --tests with isolated target directory | 21 passed, zero failed/ignored | 9 unit + 5 CLI consumer + 7 real-Git integration cases |
-| cargo test --locked --release --lib --tests | 21 passed, zero failed/ignored | Same journeys in optimized build |
+| cargo clippy --locked --all-targets -- -D warnings, isolated target | Passed | Source and tests |
+| cargo test --locked --lib --tests, isolated target | 39 passed, zero failed/ignored | 9 unit, 7 compiled CLI consumer, 7 real-Git and 16 planning cases |
+| cargo test --locked --release --lib --tests | 39 passed, zero failed/ignored | Same actual journeys in optimized build |
 | cargo build --locked --release | Passed | Actual Rust executable |
-| Release CLI validate-package --root . | Passed: 14 skills, 14 profiles | Structural/path/privacy checks; not comprehensive secret or official schema validation |
-| Official Agent Plugins 1.0.0 manifest schema | Passed via separate build-time jsonschema validator | Downloaded official schema; no new runtime dependency |
-| OSV dependency query | 72 pinned registry packages checked, zero known advisories returned | Current Cargo.lock hash recorded in quality/dependency-scan.json; database coverage is limited |
-| Independent source/security review | Passed after five corrections | Exact decimals, reserved JSON tag, gitlinks, CRLF and fixture hooks/signing; see quality/source-review.md |
-| Hosted CI | Initial implementation 2190e47 passed push and PR runs: validate, test and final-gate | 23 actual Linux tests passed; inspect current PR revision before merge |
-| Plugin directory / live adapters / RAG / models / A2A | Unverified | No provider, host install, account or remote service is simulated |
+| Release CLI validate-package --root . | Passed: 14 skills, 14 profiles | Structural/path/privacy checks; no official-schema claim |
+| Official Agent Plugins 1.0.0 manifest schema | Passed via separate jsonschema validator | Downloaded official schema; no runtime dependency added |
+| Skill Creator quick checks and UI YAML parsing | Passed: 14 skills and 14 UI records | Authoring validation; host discovery is separate |
+| OSV dependency query | 72 locked registry packages checked; zero known advisories returned | Current lock hash in quality/dependency-scan.json; limited database coverage |
+| Independent source/security/evidence/docs review | Accepted after two planning corrections | Same-source evidence invalidation and stale/self-review chart labels; quality/source-review.md |
+| Hosted CI for this new source | Pending push and exact-head verification | Required Windows/Linux validation, full tests and optimized CLI E2E; final-gate requires all success |
+| Directory listing / live adapters / RAG / models / A2A | Unverified | No provider, target application or remote agent service simulated |
 
-CLI E2E exercises real compiled executable invocation, extracted/copied package validation,
-CRLF portability, missing targets/private config rejection, typed bounded routes and
-invalid inputs, real Git snapshot/report validation, stale source rejection and missing
-merge CI rejection. Gate report contents are synthetic fixtures explicitly labeled as
-such; they are not claims that a business application passed tests. Two Unix-only cases
-for symlink/execute-bit behavior also passed in hosted Linux CI (23 total).
+CLI E2E invokes the actual compiled executable. It covers package validation,
+CRLF portability, missing Markdown/private config rejection, bounded routes and
+malformed inputs, real Git snapshot/report/source freshness and missing merge CI,
+plus planning validation, bounded wave, safely escaped chart and the full
+work/review/fix/review/acceptance journey. Failed/skipped records, stale events,
+unknown runtime capabilities, graph errors and oversized JSON fail as expected.
+Report and planning evidence contents are explicitly synthetic fixtures used to test
+validators; they are not claims of application QA or authenticated reviewer identity.
 
-The original Windows debug target later hit LNK1104 output-file access failures. A
-clean isolated target rebuilt and passed the same complete debug suite, and the release
-suite also passed. No failed run is counted as success; no checks were disabled.
+Planning regressions cover dependencies/cycles, bounded counts, reported live slots,
+active and selected ownership conflicts, case semantics, evidence invalidation on
+source changes and same-source correction/restart, leaves-first downstream invalidation,
+reviewer claims and chart injection. Two additional Unix-only Git cases are exercised
+by Linux CI. Actual hosted results must be inspected after this push.
 
-Package helpers were migrated from Python to Rust. Research-only external Python
-references remain valid. No CO_OP desktop application was rewritten or tested here;
-its source analysis and limitations are documented in CO-OP-ADAPTATION.md.
+The previous 0.2.0 source passed 21 Windows and 23 hosted Linux tests. Its debug target
+once hit LNK1104 output access failures; a clean isolated build and release suite
+passed without disabling checks. The 0.3.0 isolated/debug and release runs above passed.
+Package helpers use Rust. No CO_OP desktop application was rewritten or executed here;
+source-grounded adaptation limits are in [CO-OP-ADAPTATION.md](CO-OP-ADAPTATION.md).
 
-Archives exclude target/, .git/, caches, bytecode, credentials and personal configuration.
-BUILD-INFO.json lists source hashes, while the adjacent checksum covers the archive.
-Hashes establish consistency, not authorship, trustworthy evidence or complete safety.
-Required local review and real consumer checks precede a code push; hosted verification
-and branch rules are assessed separately. OpenAI directory approval is separate.
+Archives exclude build outputs, Git internals, caches, credentials and personal config.
+BUILD-INFO.json indexes authored source hashes; archive checksums and consumer checks
+establish consistency, not provenance, truthful evidence or complete safety.
+Actual local QA and independent review precede feature-code pushes. Hosted checks,
+protected reviews and release authority remain separate gates.
 
-Initial hosted evidence: [push run](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37057065778) and [PR run](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37057152715), both successful on 2190e47c9e71684196ace3e042dda3b8040bda25. Later documentation/evidence revisions must inspect their own current runs. [PR #4](https://github.com/NAVANEETHVVINOD/agent-orchestrator/pull/4) is open for human review; branch protection requires final-gate, one approving review and resolved conversations, and disallows force pushes/deletion. Private vulnerability reporting is enabled.
+[PR #4](https://github.com/NAVANEETHVVINOD/agent-orchestrator/pull/4) requires final-gate,
+one approving GitHub review and resolved conversations; protection applies to admins.
+Force pushes/deletion are disabled and private vulnerability reporting is enabled.
+The prior head 446504bad6a1ac7325366d6f8f26f80e366029a4 passed its
+[PR CI](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37057788525).
+Those old checks cannot establish readiness for the new 0.3.0 source.

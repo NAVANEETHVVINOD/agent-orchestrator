@@ -1,10 +1,11 @@
 [package]
 name = "agent-orchestrator"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2024"
 rust-version = "1.94"
 license = "Apache-2.0"
-description = "Local evidence, routing and portable-plugin validation helpers"
+description = "Local task planning, evidence, routing and portable-plugin validation"
+repository = "https://github.com/NAVANEETHVVINOD/agent-orchestrator"
 
 [[bin]]
 name = "orchestrator"
