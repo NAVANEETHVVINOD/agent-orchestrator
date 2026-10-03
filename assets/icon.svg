@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Agent orchestration">
+<rect width="128" height="128" rx="28" fill="#16315B"/>
+<path d="M64 43v29M64 72H30m34 0h34M30 72v18m68-18v18" fill="none" stroke="#8CD8E8" stroke-width="7" stroke-linecap="round"/>
+<circle cx="64" cy="32" r="16" fill="#FFFFFF"/><circle cx="30" cy="97" r="13" fill="#8CD8E8"/><circle cx="98" cy="97" r="13" fill="#8CD8E8"/>
+</svg>

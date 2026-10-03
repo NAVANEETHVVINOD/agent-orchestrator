@@ -1,0 +1,23 @@
+name: Bug report
+description: Report an observed failure with reproducible evidence
+title: "Bug: "
+body:
+  - type: textarea
+    id: environment
+    attributes:
+      label: Host and version
+      description: Include plugin version, OS and available runtime. Omit credentials and private records.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction and observed result
+      description: Include expected behavior and sanitized actual output.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification evidence
+      description: Which checks passed, failed, were skipped or were unavailable?

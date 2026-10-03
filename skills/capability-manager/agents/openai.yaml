@@ -1,0 +1,4 @@
+interface:
+  display_name: "Capability Manager"
+  short_description: "Research, create and verify project capabilities"
+  default_prompt: "Use $capability-manager for the requested project capability."

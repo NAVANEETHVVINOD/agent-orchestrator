@@ -1,0 +1,4 @@
+interface:
+  display_name: "Business Operations"
+  short_description: "Coordinate sourced business, legal and finance drafts"
+  default_prompt: "Use $business-operations to coordinate this business task with evidence and review."

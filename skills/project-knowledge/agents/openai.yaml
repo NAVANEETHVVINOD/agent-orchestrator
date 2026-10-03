@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Knowledge"
+  short_description: "Plan and evaluate optional project retrieval or RAG"
+  default_prompt: "Use $project-knowledge for the requested project capability."

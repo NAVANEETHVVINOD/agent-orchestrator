@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Design"
+  short_description: "Design architecture, data contracts and user journeys"
+  default_prompt: "Use $project-design for the assigned project stage."

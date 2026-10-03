@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Evidence Review"
+  short_description: "Verify claims, assumptions and production completeness"
+  default_prompt: "Use $project-evidence-review for the assigned project stage."

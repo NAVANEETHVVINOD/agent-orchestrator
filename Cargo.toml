@@ -1,0 +1,23 @@
+[package]
+name = "agent-orchestrator"
+version = "0.3.0"
+edition = "2024"
+rust-version = "1.94"
+license = "Apache-2.0"
+description = "Local task planning, evidence, routing and portable-plugin validation"
+repository = "https://github.com/NAVANEETHVVINOD/agent-orchestrator"
+
+[[bin]]
+name = "orchestrator"
+path = "src/main.rs"
+
+[dependencies]
+serde_json = { version = "=1.0.151", features = ["arbitrary_precision"] }
+sha2 = "=0.11.0"
+toml = "=1.1.6"
+rust_decimal = { version = "=1.43.0", default-features = false, features = ["std"] }
+regex = "=1.13.1"
+walkdir = "=2.5.0"
+
+[profile.release]
+overflow-checks = true

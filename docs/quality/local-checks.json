@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-03",
+  "environment": "Windows Rust1.94.1 Git",
+  "source_digest": "a6b22e35cef27c89dc7f83a29e0fc38bd1585cd367e84b6657a85f006682f900",
+  "checks": [
+    {
+      "command": "cargo fmt --check",
+      "status": "passed"
+    },
+    {
+      "command": "cargo clippy --locked --all-targets --target-dir <isolated> -- -D warnings",
+      "status": "passed"
+    },
+    {
+      "command": "cargo test --locked --lib --tests --target-dir <isolated>",
+      "status": "passed",
+      "tests_passed": 39,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "command": "cargo test --locked --release --lib --tests",
+      "status": "passed",
+      "tests_passed": 39,
+      "failed": 0,
+      "ignored": 0
+    },
+    {
+      "command": "cargo build --locked --release",
+      "status": "passed"
+    },
+    {
+      "command": "release validate-package --root .",
+      "status": "passed",
+      "skills": 14,
+      "profiles": 14
+    },
+    {
+      "command": "official schema, Skill Creator quick checks, UI YAML parsing",
+      "status": "passed",
+      "skills": 14,
+      "ui_records": 14
+    }
+  ],
+  "consumer_e2e": "Seven actual compiled CLI consumers; Git/planning reported-evidence fixtures explicitly synthetic",
+  "unverified": [
+    "host plugin installation/discovery",
+    "live target adapters/RAG/models/MCP/A2A",
+    "directory approval",
+    "current hosted CI before push"
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plugin Safety Review"
+  short_description: "Audit plugin provenance, privileges and instruction scope"
+  default_prompt: "Use $plugin-safety-review for the requested project task."

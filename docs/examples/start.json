@@ -1,0 +1,4 @@
+{
+  "format_version": 1, "project_id": "synthetic-example", "expected_revision": 0,
+  "task_id": "build", "actor": "coordinator", "from": "planned", "to": "running"
+}
