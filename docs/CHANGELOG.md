@@ -15,8 +15,12 @@ runs passed, as did both final gates ([PR run](https://github.com/NAVANEETHVVINO
 [merge-commit run](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37903287143)).
 The current OSV exact-version scan found zero known advisories across 129 registry entries, and
 license metadata was inventoried for all 129 entries. Independent review found no security or
-reliability issue in the current local stdio source. Exact-head hosted CI, ChatGPT web E2E and
-remote HTTP authentication remain unverified. This is not yet a release or remote ChatGPT endpoint.
+reliability issue in the current local stdio source. ChatGPT web E2E and remote HTTP authentication
+remain unverified. PR #8 merged the four-request bound and rolling
+notification window as `e2ac715`; its exact PR-head run and merge-commit Linux/Windows runs passed
+all checks and final-gate ([PR run](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37910731823),
+[merge run](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37912634478)).
+This is not yet a release or remote ChatGPT endpoint.
 See [MCP scope and remaining verification](MCP.md).
 
 ## 0.3.0 — 3 October 2026

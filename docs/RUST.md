@@ -8,7 +8,9 @@ debug/release tests and independent review of the bounded transport/test correct
 PR #7 and merge-commit hosted Linux/Windows checks, optimized CLI/MCP E2E and both final gates
 passed. The current OSV query found zero known advisories and license metadata was inventoried for
 all 129 registry entries. Independent review found no security or reliability issue in the current
-local stdio source. Exact-head hosted CI and remote ChatGPT E2E remain unverified.
+local stdio source. Remote ChatGPT E2E and hosted HTTP authentication remain unverified.
+The follow-up was merged as `e2ac715`; PR-head run 37910731823 and merge-commit run 37912634478
+passed all Linux/Windows validation, tests, optimized CLI/MCP E2E and final-gate jobs.
 It is not included in the released 0.3.0 archive.
 It also adds a bounded,
 declarative JSON project workflow format with profile/skill reference validation; see
