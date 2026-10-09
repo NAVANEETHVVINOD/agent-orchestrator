@@ -1,6 +1,8 @@
 //! Actual compiled-binary MCP journeys. Plans/check claims are synthetic fixtures;
 //! these tests verify the local planning protocol, not Fusion or agent execution.
-use agent_orchestrator::mcp::{BoundedTransport, FRAME_LIMIT, FRAME_TIMEOUT, RECORD_LIMIT};
+use agent_orchestrator::mcp::{
+    BoundedTransport, FRAME_LIMIT, FRAME_TIMEOUT, OUTSTANDING_LIMIT, RECORD_LIMIT,
+};
 use rmcp::{
     RoleClient, ServiceExt,
     model::{
@@ -442,6 +444,105 @@ async fn initialized_sdk_session_exits_on_eof_and_has_no_protocol_stdout_noise()
         6
     );
     timeout(LIMIT, client.cancel()).await.unwrap().unwrap();
+    assert!(
+        timeout(LIMIT, child.wait())
+            .await
+            .unwrap()
+            .unwrap()
+            .success()
+    );
+}
+
+#[tokio::test(flavor = "current_thread")]
+async fn compiled_server_accepts_bounded_pipelined_tool_calls() {
+    let mut child = raw_child();
+    let mut stdin = child.stdin.take().unwrap();
+    let mut stdout = BufReader::new(child.stdout.take().unwrap());
+    let initialize = json!({
+        "jsonrpc":"2.0", "id":1, "method":"initialize",
+        "params":{"protocolVersion":"2025-06-18","capabilities":{},
+            "clientInfo":{"name":"bounded-pipeline-test","version":"1"}}
+    });
+    stdin
+        .write_all(format!("{initialize}\n").as_bytes())
+        .await
+        .unwrap();
+    let mut line = String::new();
+    timeout(LIMIT, stdout.read_line(&mut line))
+        .await
+        .unwrap()
+        .unwrap();
+    assert_eq!(serde_json::from_str::<Value>(&line).unwrap()["id"], 1);
+    stdin
+        .write_all(b"{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}\n")
+        .await
+        .unwrap();
+
+    let plan_json = plan().to_string();
+    let calls = [
+        json!({"jsonrpc":"2.0","id":2,"method":"tools/call","params":{
+            "name":"validate_plan","arguments":{"plan_json":plan_json}}}),
+        json!({"jsonrpc":"2.0","id":3,"method":"tools/call","params":{
+            "name":"render_chart","arguments":{"plan_json":plan_json}}}),
+        json!({"jsonrpc":"2.0","id":4,"method":"tools/call","params":{
+            "name":"route_proposal","arguments":{"proposal_json":
+                r#"{"format_version":1,"available_routes":["qa"],"minimum_score":0.7,"minimum_margin":0.1,"proposals":[{"route":"qa","score":0.9}]}"#}}}),
+        json!({"jsonrpc":"2.0","id":5,"method":"tools/call","params":{
+            "name":"validate_workflow_config","arguments":{"workflow_json":
+                include_str!("../examples/project-workflow.json")}}}),
+    ];
+    let pipelined = calls
+        .iter()
+        .map(|call| format!("{call}\n"))
+        .collect::<String>();
+    stdin.write_all(pipelined.as_bytes()).await.unwrap();
+
+    let mut response_ids = Vec::new();
+    for _ in 0..OUTSTANDING_LIMIT {
+        line.clear();
+        timeout(LIMIT, stdout.read_line(&mut line))
+            .await
+            .unwrap()
+            .unwrap();
+        let response: Value = serde_json::from_str(&line).unwrap();
+        assert!(response.get("error").is_none(), "{response}");
+        assert_eq!(response["result"]["isError"], false, "{response}");
+        assert!(
+            response["result"]["structuredContent"].is_object(),
+            "{response}"
+        );
+        assert_eq!(
+            response["result"]["structuredContent"]["execution_performed"], false,
+            "{response}"
+        );
+        assert_eq!(
+            response["result"]["structuredContent"]["external_action_authorized"], false,
+            "{response}"
+        );
+        assert_eq!(
+            response["result"]["structuredContent"]["reported_evidence_verified"], false,
+            "{response}"
+        );
+        response_ids.push(response["id"].as_u64().unwrap());
+    }
+    response_ids.sort_unstable();
+    assert_eq!(response_ids, [2, 3, 4, 5]);
+
+    stdin
+        .write_all(b"{\"jsonrpc\":\"2.0\",\"id\":6,\"method\":\"shutdown\",\"params\":{}}\n")
+        .await
+        .unwrap();
+    line.clear();
+    timeout(LIMIT, stdout.read_line(&mut line))
+        .await
+        .unwrap()
+        .unwrap();
+    assert_eq!(serde_json::from_str::<Value>(&line).unwrap()["id"], 6);
+    stdin
+        .write_all(b"{\"jsonrpc\":\"2.0\",\"method\":\"notifications/exit\"}\n")
+        .await
+        .unwrap();
+    drop(stdin);
     assert!(
         timeout(LIMIT, child.wait())
             .await

@@ -7,11 +7,16 @@ kernel. It exposes six bounded planning, workflow-validation and routing tools a
 execute agents, access the filesystem or authorize external actions. Adds a declarative
 JSON role/profile/skill mapping and quality-gate authoring schema with validation in the
 Rust CLI/MCP. Inbound frames are capped at 8 MiB with a 15-second completion deadline;
-output writes remain capped at 5 seconds. Windows debug/release tests and independent
-review of the deadline adjustment pass. Earlier hosted Linux runs failed in an MCP
-subprocess error-path journey; this revision serializes those process-heavy test cases and
-adds case-level diagnostics. Hosted Linux validation of that correction is pending, as is
-ChatGPT web E2E. This is not yet a release or remote ChatGPT endpoint.
+output writes remain capped at 5 seconds. Windows local debug/release tests and independent
+review of the bounded transport/test correction passed. Earlier hosted Linux runs failed in
+an MCP subprocess error path; the tests now serialize the process-heavy cases and add indexed
+diagnostics. PR #7 and post-merge Linux/Windows validation, test and optimized CLI/MCP E2E
+runs passed, as did both final gates ([PR run](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37902677375),
+[merge-commit run](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37903287143)).
+The current OSV exact-version scan found zero known advisories across 129 registry entries, and
+license metadata was inventoried for all 129 entries. Independent review found no security or
+reliability issue in the current local stdio source. Exact-head hosted CI, ChatGPT web E2E and
+remote HTTP authentication remain unverified. This is not yet a release or remote ChatGPT endpoint.
 See [MCP scope and remaining verification](MCP.md).
 
 ## 0.3.0 — 3 October 2026
