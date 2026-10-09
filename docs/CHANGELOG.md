@@ -1,5 +1,15 @@
 # Changes
 
+## Unreleased (0.4.0)
+
+Adds a separately built local Rust stdio MCP facade over the deterministic planning
+kernel. It exposes six bounded planning, workflow-validation and routing tools and does not
+execute agents, access the filesystem or authorize external actions. Adds a declarative
+JSON role/profile/skill mapping and quality-gate authoring schema with validation in the
+Rust CLI/MCP. Windows debug/release tests and independent source/security review pass;
+cross-platform hosted CI and ChatGPT web E2E remain pending. This is not yet a release or
+a remote ChatGPT endpoint. See [MCP scope and remaining verification](MCP.md).
+
 ## 0.3.0 — 3 October 2026
 Adds a stateless Rust task-planning kernel: dependency validation, bounded work-wave
 proposals, scope conflicts, escaped charts and revision-checked review/correction

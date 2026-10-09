@@ -38,11 +38,14 @@ stale revisions, malformed records, failed/skipped required checks, unresolved d
 ownership conflicts and stale downstream acceptance are rejected or held. The core
 does not execute returned IDs or translate an acceptance label into external authority.
 
-The next UI/provider decisions remain open: plugin-only versus optional dashboard,
-single-user local versus hosted teams, durable concurrent storage, identity/tenancy,
-selected RAG corpus/provider, model routing calibration and chosen external A2A service.
-These choices require user requirements and budgets before their dependent implementation.
-Research and a draft architecture can proceed without pretending those choices are made.
+The user selected ChatGPT web plus Codex, including a Rust MCP service, with zero
+ongoing hosting budget. Publication is held until the selected product is ready.
+The provider-independent next milestone is a local stateless Rust stdio MCP facade.
+Remote hosting, data/identity boundaries, optional dashboard, durable storage, RAG
+corpus/provider, model calibration and external A2A endpoint remain unresolved.
+Research and local implementation can proceed while dependent remote work waits.
+See [agent architecture](AGENT-ARCHITECTURE.md), [MCP scope](MCP.md) and the
+[live goal-linked ledger](TASK-LIST.md).
 
 ## Open-source reuse
 
@@ -52,10 +55,14 @@ would duplicate the host and introduce new permissions. [petgraph 0.8.3](https:/
 is an optional future graph-library candidate (release commit
 162903562ce5b00cdba390a0d9c1bb80f1c75bf5, MIT OR Apache-2.0).
 The [official Rust MCP SDK](https://github.com/modelcontextprotocol/rust-sdk/tree/0cde3c5cf3e6aff0cc852ce6045f107e95991f48)
-is a candidate for a later selected stdio facade (rmcp-v3.5.0); inspect exact artifact
-licensing and protocol/host compatibility before bundling. Neither dependency is
-added merely for research. CO_OP and CLI-Anything patterns and exclusions are documented
-in the source analysis. Actual target adapters need a chosen app and real target tests.
+is pinned to rmcp 3.5.0 for the selected stateless stdio facade; registry artifact
+provenance and license are checked separately from repository examples. Its Windows
+debug/release subprocess consumer tests and independent review pass; hosted cross-platform
+CI is still pending. CO_OP and CLI-Anything
+patterns and exclusions are documented in the source analysis. Fusion is the selected
+first app assessment target and already offers official MCP; no connection or real CAD
+E2E has occurred. Use open-source designs as references and author our own Rust code;
+do not port complete frameworks or copy data merely to change the license.
 
 ## Delivery contract
 

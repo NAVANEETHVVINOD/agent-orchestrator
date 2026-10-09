@@ -48,6 +48,7 @@ jobs:
           persist-credentials: false
       - run: rustup toolchain install 1.94.1 --profile minimal
       - run: cargo +1.94.1 test --locked --release --test cli
+      - run: cargo +1.94.1 test --locked --release --test mcp
       - run: cargo +1.94.1 run --locked --release -- validate-package --root .
   final-gate:
     if: always()

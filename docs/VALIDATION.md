@@ -44,9 +44,13 @@ establish consistency, not provenance, truthful evidence or complete safety.
 Actual local QA and independent review precede feature-code pushes. Hosted checks,
 protected reviews and release authority remain separate gates.
 
-[PR #4](https://github.com/NAVANEETHVVINOD/agent-orchestrator/pull/4) requires final-gate,
-one approving GitHub review and resolved conversations; protection applies to admins.
-Force pushes/deletion are disabled and private vulnerability reporting is enabled.
-The prior head 446504bad6a1ac7325366d6f8f26f80e366029a4 passed its
-[PR CI](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37057788525).
-Those old checks cannot establish readiness for the new 0.3.0 source.
+PR #4 was merged after its current-source review and required checks. Its older PR CI
+run on head 446504bad6a1ac7325366d6f8f26f80e366029a4 is recorded
+[here](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37057788525);
+those old checks cannot establish readiness for later source.
+
+Live `main` protection verified 9 October 2026 requires `final-gate` and resolved
+conversations, applies to administrators, disables force pushes and deletion, and has
+zero required GitHub approvals after the user's explicit request. Independent source
+review remains a project delivery gate; it is separate from GitHub's approval count.
+The same protection setting must not be mistaken for a passed review on a future PR.
