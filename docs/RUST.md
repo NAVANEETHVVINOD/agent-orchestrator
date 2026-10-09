@@ -4,8 +4,12 @@ The package's local executable helpers are Rust, with pinned dependency versions
 Cargo.lock. The instruction skills require no server. Building the optional CLI needs
 Rust 1.94.1 or a compatible newer stable toolchain, and Git for project-gate.
 The unreleased 0.4.0 work adds `orchestrator-mcp`, a local stdio planning facade. Windows
-debug/release tests and independent security/reliability review pass; hosted cross-platform
-CI and remote ChatGPT E2E are pending. It is not included in the released 0.3.0 archive.
+debug/release tests and independent review of the bounded transport/test correction passed.
+PR #7 and merge-commit hosted Linux/Windows checks, optimized CLI/MCP E2E and both final gates
+passed. The current OSV query found zero known advisories and license metadata was inventoried for
+all 129 registry entries. Independent review found no security or reliability issue in the current
+local stdio source. Exact-head hosted CI and remote ChatGPT E2E remain unverified.
+It is not included in the released 0.3.0 archive.
 It also adds a bounded,
 declarative JSON project workflow format with profile/skill reference validation; see
 [workflow schema](../schemas/project-workflow.schema.json) and [example](../examples/project-workflow.json).

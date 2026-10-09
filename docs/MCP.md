@@ -1,10 +1,16 @@
 # Rust MCP planning interface
 
 The unreleased 0.4.0 development branch adds `orchestrator-mcp`, a native Rust **local
-stdio** server using the official rmcp 3.5.0 SDK. Windows debug/release subprocess tests
-and independent security/reliability review pass; current hosted cross-platform CI and
-ChatGPT web E2E remain pending. This is distinct from the released 0.3.0 skills package.
-It is not a hosted ChatGPT endpoint or an application-control server.
+stdio** server using the official rmcp 3.5.0 SDK. PR #7 and merge-commit run 37903287143
+passed Linux/Windows validation, test and optimized CLI/MCP E2E jobs; both final-gate
+jobs passed ([PR run](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37902677375),
+[merge-commit run](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37903287143)).
+Independent review covered the bounded transport and subprocess-test correction. OSV's exact-version
+scan found zero advisories across 129 registry entries; the 129-row license inventory found no missing
+fields or yanked versions. Independent review of the current local stdio source found no security
+or reliability issue. The follow-up still needs exact-head hosted CI; ChatGPT web E2E, hosted HTTP
+authentication and external agent dispatch remain outside this scope.
+This is distinct from the released 0.3.0 skills package. It is not a hosted ChatGPT endpoint or an application-control server.
 
 ## Tool contract
 
@@ -49,15 +55,22 @@ Invalid tool records return tool errors, allowing subsequent valid calls.
 
 Initialization has a 15-second timeout. A partial input frame has a 15-second absolute
 deadline, and output writes have a 5-second timeout. An initialized idle session may wait
-for a new request. EOF ends the session. The transport allows one outstanding request at
-a time, bounds notification tasks, and serializes a response only while holding its single
-output permit. These aggregate limits and stalled-I/O paths pass Windows debug/release
-tests, and independent review found the deadline adjustment preserves the resource bounds.
+for a new request. EOF ends the session. The transport allows at most four outstanding
+requests and 64 notifications in any rolling 60-second window. A fifth pending request,
+the 65th notification in-window, or a notification frame over 4 KiB closes the session;
+a fresh process can recover. Responses are serialized only while holding the single output
+permit. The merged-main bounds passed Windows debug/release tests. The follow-up four-call
+pipeline and rolling-window changes passed the full Windows local gates; exact-head hosted CI
+remains pending.
 Earlier hosted Linux debug/release runs failed in the invalid-record MCP subprocess
 journey. The tests now label each invalid probe, and CI serializes this subprocess-heavy
-suite to reduce runner contention without changing assertions. Local serial Windows debug
-and release suites pass; hosted Linux validation of this correction is pending. Do not
-treat the hosted gate as passed yet.
+suite to reduce runner contention without changing assertions. The PR-head and merge-commit
+runs passed the Linux/Windows checks and final gate; see the links above. Local serial
+Windows debug and release suites passed on merged commit 8e2ddc1 and on the follow-up worktree.
+The current lock's advisory and license results are
+recorded in docs/quality/dependency-scan.json and docs/quality/dependency-license-inventory.csv.
+Independent review of the current local stdio source found no security or reliability finding.
+The follow-up's exact-head hosted CI is still pending; PR #7 results above do not cover it.
 Local process permissions still belong to the host. No HTTP/OAuth guarantees
 are claimed for this stdio interface.
 
@@ -80,9 +93,14 @@ frames, exact-score rejection, wrong arguments/tools, stale/self-review acceptan
 EOF, timeout and stdout discipline. Plans/check claims are synthetic fixtures; these
 tests do not prove Fusion, real reviewers or an external agent ran.
 
-Local fmt/clippy/full tests/release E2E and independent source/security/evidence review
-passed before any feature push. CI must still run these consumers in debug and optimized
-builds on Windows/Linux against the pushed revision. The ledger records actual results.
+For PR #7, local fmt/clippy/full tests/release E2E and independent review of MCP resource bounds
+and the subprocess-test correction passed before the feature push. For the follow-up worktree,
+fmt, Clippy, all 59 debug tests, optimized build, release CLI/MCP E2E and package validation
+also passed; independent review found no local stdio security or reliability issue. The exact PR #7 head and
+post-merge runs passed hosted Linux/Windows validation, tests and optimized CLI/MCP E2E,
+with both final-gate jobs successful. The current OSV query found zero known advisories and
+license metadata was inventoried for all 129 registry entries. These checks do not constitute a
+full security certification. Hosted HTTP/authentication and external agent dispatch remain unreviewed.
 
 For ChatGPT web, select real zero-cost hosting and an explicit data/identity boundary,
 then implement and review HTTPS Streamable HTTP, host/origin enforcement, bounded

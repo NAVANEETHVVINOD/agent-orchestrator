@@ -1,8 +1,51 @@
 {
-  "lock_sha256": "6866ed8e7c0c9e5565f49cfc40110d311f2af51212a9ce3aafdae139bbaba3c8",
-  "scan_date": "2026-10-03",
-  "packages_checked": 72,
-  "database": "OSV",
-  "limit": "Known database advisories only; not a complete security audit",
+  "lock_sha256": "8aa77785c3b9da21d81d401a4f2db593bb6315cf15d9df004bb4b7bc7454f9d5",
+  "scan_date": "2026-10-09",
+  "packages_checked": 129,
+  "database": "OSV batch API",
+  "query": {
+    "exact_package_version_queries": 129,
+    "results": 129,
+    "advisories_found": 0,
+    "completed_at_utc": "2026-10-09T08:27:51Z",
+    "scope": "All 129 registry package/version entries; local workspace package excluded"
+  },
+  "license_inventory": {
+    "source": "crates.io exact-version package metadata",
+    "inventory_file": "docs/quality/dependency-license-inventory.csv",
+    "locked_registry_entries": 129,
+    "unique_crates": 122,
+    "license_fields_present": 129,
+    "missing_license_fields": 0,
+    "yanked_versions": 0,
+    "expressions_with_permissive_options": 127,
+    "copyleft_only_expressions": 0,
+    "expression_counts": {
+      "MIT OR Apache-2.0": 90,
+      "Apache-2.0 OR MIT": 7,
+      "MIT": 17,
+      "Apache-2.0": 2,
+      "Unlicense OR MIT": 3,
+      "Unlicense/MIT": 2,
+      "MIT OR Apache-2.0 OR LGPL-2.1-or-later": 2,
+      "(MIT OR Apache-2.0) AND Unicode-3.0": 1,
+      "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT": 3,
+      "BSD-2-Clause OR Apache-2.0 OR MIT": 2
+    },
+    "notes": [
+      "The local agent-orchestrator 0.4.0 package is excluded from registry counts and declares Apache-2.0.",
+      "r-efi 5.3.0 and 6.0.0 offer MIT or Apache-2.0 alternatives alongside LGPL-2.1-or-later.",
+      "unicode-ident 1.0.26 declares (MIT OR Apache-2.0) AND Unicode-3.0; retain its Unicode notice.",
+      "same-file 1.0.6 and walkdir 2.5.0 use non-SPDX Unlicense/MIT metadata; upstream package docs/manifests identify both licenses."
+    ]
+  },
+  "sources": [
+    "https://google.github.io/osv.dev/post-v1-querybatch/",
+    "https://github.com/RustSec/advisory-db",
+    "https://doc.rust-lang.org/cargo/reference/registry-web-api.html",
+    "https://doc.crates.io/manifest.html",
+    "https://spdx.org/licenses/Unicode-3.0.html"
+  ],
+  "limits": "The OSV result covers known package/version advisories only. License fields are publisher metadata; compatibility must be assessed with retained third-party notices. This is not a source-code, malicious-package, legal or complete security audit.",
   "findings": []
 }

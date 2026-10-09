@@ -12,7 +12,7 @@ use rmcp::{
 };
 use serde_json::{Map, Value, json};
 use std::{
-    collections::HashSet,
+    collections::{HashSet, VecDeque},
     io,
     sync::{
         Arc, Mutex as SyncMutex,
@@ -27,20 +27,20 @@ use tokio::{
 };
 
 pub const RECORD_LIMIT: usize = 1024 * 1024;
-/// Bounds one wire frame, including its trailing newline. The transport permits
-/// one accepted request at a time; a pipelined frame may be buffered but is
-/// rejected before JSON parsing, bounding additional receive-side allocation.
+/// Bounds one wire frame, including its trailing newline.
 pub const FRAME_LIMIT: usize = 8 * 1024 * 1024;
 /// Gives local clients time to transmit a bounded, large request frame while
 /// still limiting how long an incomplete stdio frame can hold the session.
 pub const FRAME_TIMEOUT: Duration = Duration::from_secs(15);
 /// Bounds output writes and transport shutdown independently of frame receive.
 pub const IO_TIMEOUT: Duration = Duration::from_secs(5);
-/// rmcp dispatches every received request into a task. Keep at most one request
-/// awaiting its response write so pipelining cannot accumulate queued results.
-/// Overload closes this stdio session; a new process/session can recover.
-pub const OUTSTANDING_LIMIT: usize = 1;
+/// Bound rmcp request tasks and queued results while allowing ordinary parallel
+/// tool calls. A fifth uncompleted request closes this stdio session.
+pub const OUTSTANDING_LIMIT: usize = 4;
+/// Limit notification task creation in any rolling minute without imposing a
+/// lifetime cap on a healthy long-running local session.
 pub const NOTIFICATION_LIMIT: usize = 64;
+pub const NOTIFICATION_WINDOW: Duration = Duration::from_secs(60);
 
 const DEFINITIONS: [(&str, &[&str], &str); 6] = [
     (
@@ -180,7 +180,7 @@ pub struct BoundedTransport<R, W> {
     partial: Vec<u8>,
     deadline: Option<Instant>,
     outstanding: Arc<SyncMutex<HashSet<RequestId>>>,
-    notifications: usize,
+    notifications: VecDeque<Instant>,
     failed: Arc<AtomicBool>,
 }
 impl<R: AsyncRead, W> BoundedTransport<R, W> {
@@ -191,7 +191,7 @@ impl<R: AsyncRead, W> BoundedTransport<R, W> {
             partial: Vec::new(),
             deadline: None,
             outstanding: Arc::new(SyncMutex::new(HashSet::new())),
-            notifications: 0,
+            notifications: VecDeque::new(),
             failed: Arc::new(AtomicBool::new(false)),
         }
     }
@@ -303,15 +303,8 @@ where
             self.partial.extend_from_slice(&available[..count]);
             self.reader.consume(count);
             if complete {
-                // Do not build a second parsed request while a prior reply is
-                // outstanding. The raw receive buffer is still frame-bounded.
-                let has_outstanding = match self.outstanding.lock() {
-                    Ok(outstanding) => !outstanding.is_empty(),
-                    Err(_) => return self.fail(),
-                };
-                if has_outstanding {
-                    return self.fail();
-                }
+                // Parse one bounded frame at a time; tracked request IDs cap
+                // outstanding service tasks and their queued responses.
                 let parsed = match strict_json::parse(&self.partial) {
                     Ok(parsed) => parsed,
                     Err(_) => return self.fail(),
@@ -337,12 +330,20 @@ where
                         }
                     }
                     JsonRpcMessage::Notification(_) => {
-                        // This server makes no peer requests. Bound all notification tasks
-                        // too, including cancellations/progress sent without a request.
-                        self.notifications += 1;
-                        if self.notifications > NOTIFICATION_LIMIT || self.partial.len() > 4096 {
+                        // Rate-limit notification task creation, including
+                        // cancellations/progress sent without a request.
+                        let now = Instant::now();
+                        while self.notifications.front().is_some_and(|received| {
+                            now.duration_since(*received) >= NOTIFICATION_WINDOW
+                        }) {
+                            self.notifications.pop_front();
+                        }
+                        if self.notifications.len() >= NOTIFICATION_LIMIT
+                            || self.partial.len() > 4096
+                        {
                             return self.fail();
                         }
+                        self.notifications.push_back(now);
                     }
                     JsonRpcMessage::Response(_) | JsonRpcMessage::Error(_) => return self.fail(),
                 }
@@ -409,18 +410,24 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn pipelined_request_overload_closes_and_clears_the_pending_slot() {
+    async fn pipelined_requests_are_bounded_and_overload_clears_pending_slots() {
         let (mut input, reader) = tokio::io::duplex(4096);
         let mut transport = BoundedTransport::new(reader, tokio::io::sink());
-        input
-            .write_all(
-                b"{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/list\",\"params\":{}}\n{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\",\"params\":{}}\n",
-            )
-            .await
-            .unwrap();
-
-        let first = transport.receive().await.unwrap();
-        assert!(matches!(first, JsonRpcMessage::Request(_)));
+        for id in 1..=OUTSTANDING_LIMIT {
+            let frame = serde_json::json!({
+                "jsonrpc":"2.0", "id":id, "method":"tools/list", "params":{}
+            });
+            input
+                .write_all(format!("{frame}\n").as_bytes())
+                .await
+                .unwrap();
+        }
+        for _ in 0..OUTSTANDING_LIMIT {
+            assert!(matches!(
+                transport.receive().await,
+                Some(JsonRpcMessage::Request(_))
+            ));
+        }
         assert_eq!(
             transport
                 .outstanding
@@ -429,7 +436,15 @@ mod tests {
                 .len(),
             OUTSTANDING_LIMIT
         );
+        let overflow = serde_json::json!({
+            "jsonrpc":"2.0", "id":OUTSTANDING_LIMIT + 1, "method":"tools/list", "params":{}
+        });
+        input
+            .write_all(format!("{overflow}\n").as_bytes())
+            .await
+            .unwrap();
         assert!(transport.receive().await.is_none());
+        assert!(transport.failure_flag().load(Ordering::Acquire));
         assert!(transport.partial.len() <= FRAME_LIMIT);
         assert!(
             transport
@@ -462,5 +477,49 @@ mod tests {
             Some(JsonRpcMessage::Request(_))
         ));
         next_session.close().await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn notification_rate_limit_expires_instead_of_accumulating_for_lifetime() {
+        let (mut input, reader) = tokio::io::duplex(4096);
+        let mut transport = BoundedTransport::new(reader, tokio::io::sink());
+        let frame = b"{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}\n";
+        for _ in 0..NOTIFICATION_LIMIT {
+            input.write_all(frame).await.unwrap();
+            assert!(matches!(
+                transport.receive().await,
+                Some(JsonRpcMessage::Notification(_))
+            ));
+        }
+        assert_eq!(transport.notifications.len(), NOTIFICATION_LIMIT);
+
+        let expired = Instant::now() - NOTIFICATION_WINDOW;
+        transport
+            .notifications
+            .iter_mut()
+            .for_each(|time| *time = expired);
+        input.write_all(frame).await.unwrap();
+        assert!(matches!(
+            transport.receive().await,
+            Some(JsonRpcMessage::Notification(_))
+        ));
+        assert_eq!(transport.notifications.len(), 1);
+    }
+
+    #[tokio::test]
+    async fn notification_flood_over_the_rolling_limit_closes_the_session() {
+        let (mut input, reader) = tokio::io::duplex(4096);
+        let mut transport = BoundedTransport::new(reader, tokio::io::sink());
+        let frame = b"{\"jsonrpc\":\"2.0\",\"method\":\"notifications/initialized\"}\n";
+        for index in 0..=NOTIFICATION_LIMIT {
+            input.write_all(frame).await.unwrap();
+            let received = transport.receive().await;
+            if index < NOTIFICATION_LIMIT {
+                assert!(matches!(received, Some(JsonRpcMessage::Notification(_))));
+            } else {
+                assert!(received.is_none());
+            }
+        }
+        assert!(transport.failure_flag().load(Ordering::Acquire));
     }
 }
