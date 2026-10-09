@@ -53,7 +53,8 @@ agent dispatch remain unverified.
 
 The follow-up branch adds regression tests for rolling notification expiry and four-call
 pipelining, including a compiled-server subprocess journey. All current-source Windows local gates
-passed; exact-head hosted CI is pending. PR #7 CI results above do not cover this follow-up change.
+passed. PR #8 and its merge-commit run also passed exact-head and post-merge Linux/Windows CI;
+PR #7 results above cover the earlier source revision only.
 
 ### T18 follow-up local results
 
@@ -69,10 +70,13 @@ Windows linker lock in the default target. On the current follow-up worktree:
 | `cargo test --locked --release --test cli` | 8 passed, 0 failed |
 | `cargo test --locked --release --test mcp -- --test-threads=1` | 9 passed, 0 failed, including the four-call subprocess journey |
 | Debug and release `validate-package --root .` | Passed: 14 skills and 14 profiles; official-schema validation is a separate check |
-| Independent current-source MCP review | No security or reliability finding in local stdio scope; hosted HTTP/auth and external agents were not assessed |
+| Independent current-source MCP review | No security or reliability finding in local stdio scope; hosted HTTP/auth and external agents were not assessed; [review record](quality/mcp-transport-review.md) |
 
-The current follow-up branch has not yet run hosted GitHub CI. Linux coverage and exact-head final-gate
-must pass on its PR before merge.
+The current follow-up merge commit `e2ac7150e875d834c97e7ef4bdaf3beb2e7a24c4` was validated by
+post-merge run [37912634478](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37912634478).
+All seven jobs passed: Linux/Windows validate, test and E2E plus final-gate. Its PR-head run
+[37910731823](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37910731823) also
+passed all seven jobs before merge. PR #8 is [merged](https://github.com/NAVANEETHVVINOD/agent-orchestrator/pull/8).
 
 The previous 0.2.0 source passed 21 Windows and 23 hosted Linux tests. Its debug target
 once hit LNK1104 output access failures; a clean isolated build and release suite

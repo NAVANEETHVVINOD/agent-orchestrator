@@ -5,11 +5,14 @@ stdio** server using the official rmcp 3.5.0 SDK. PR #7 and merge-commit run 379
 passed Linux/Windows validation, test and optimized CLI/MCP E2E jobs; both final-gate
 jobs passed ([PR run](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37902677375),
 [merge-commit run](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37903287143)).
+PR #8 head `5086812` merged as `e2ac715`; its PR-head and post-merge Linux/Windows checks,
+optimized E2E and final-gate also passed ([PR run](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37910731823),
+[merge run](https://github.com/NAVANEETHVVINOD/agent-orchestrator/actions/runs/37912634478)).
 Independent review covered the bounded transport and subprocess-test correction. OSV's exact-version
 scan found zero advisories across 129 registry entries; the 129-row license inventory found no missing
-fields or yanked versions. Independent review of the current local stdio source found no security
-or reliability issue. The follow-up still needs exact-head hosted CI; ChatGPT web E2E, hosted HTTP
-authentication and external agent dispatch remain outside this scope.
+fields or yanked versions. Independent review found no security or reliability issue in the local
+stdio scope. ChatGPT web E2E, hosted HTTP authentication and external agent dispatch remain outside
+this scope. See [independent review evidence](quality/mcp-transport-review.md).
 This is distinct from the released 0.3.0 skills package. It is not a hosted ChatGPT endpoint or an application-control server.
 
 ## Tool contract
@@ -59,9 +62,8 @@ for a new request. EOF ends the session. The transport allows at most four outst
 requests and 64 notifications in any rolling 60-second window. A fifth pending request,
 the 65th notification in-window, or a notification frame over 4 KiB closes the session;
 a fresh process can recover. Responses are serialized only while holding the single output
-permit. The merged-main bounds passed Windows debug/release tests. The follow-up four-call
-pipeline and rolling-window changes passed the full Windows local gates; exact-head hosted CI
-remains pending.
+permit. PR #8's four-call pipeline and rolling-window changes passed full Windows local gates,
+the PR-head CI run and the merge-commit run linked above.
 Earlier hosted Linux debug/release runs failed in the invalid-record MCP subprocess
 journey. The tests now label each invalid probe, and CI serializes this subprocess-heavy
 suite to reduce runner contention without changing assertions. The PR-head and merge-commit
@@ -70,7 +72,8 @@ Windows debug and release suites passed on merged commit 8e2ddc1 and on the foll
 The current lock's advisory and license results are
 recorded in docs/quality/dependency-scan.json and docs/quality/dependency-license-inventory.csv.
 Independent review of the current local stdio source found no security or reliability finding.
-The follow-up's exact-head hosted CI is still pending; PR #7 results above do not cover it.
+PR #8's exact-head hosted CI and post-merge run both passed; the PR #7 results above cover the
+earlier source revision only.
 Local process permissions still belong to the host. No HTTP/OAuth guarantees
 are claimed for this stdio interface.
 
@@ -86,8 +89,8 @@ the public package; no global MCP configuration is installed as a side effect.
 
 ## Acceptance and outstanding remote work
 
-Actual SDK client-to-compiled-server E2E must negotiate a compatible version, list all
-six tools and complete validate → wave → chart → work → review → correction → fresh
+Actual SDK client-to-compiled-server E2E negotiates a compatible version, lists all
+six tools and completes validate → wave → chart → work → review → correction → fresh
 review → accepted. Negative tests cover malformed/duplicate/oversized records and
 frames, exact-score rejection, wrong arguments/tools, stale/self-review acceptance,
 EOF, timeout and stdout discipline. Plans/check claims are synthetic fixtures; these
