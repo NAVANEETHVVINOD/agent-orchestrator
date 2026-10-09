@@ -31,6 +31,10 @@ pub const RECORD_LIMIT: usize = 1024 * 1024;
 /// one accepted request at a time; a pipelined frame may be buffered but is
 /// rejected before JSON parsing, bounding additional receive-side allocation.
 pub const FRAME_LIMIT: usize = 8 * 1024 * 1024;
+/// Gives local clients time to transmit a bounded, large request frame while
+/// still limiting how long an incomplete stdio frame can hold the session.
+pub const FRAME_TIMEOUT: Duration = Duration::from_secs(15);
+/// Bounds output writes and transport shutdown independently of frame receive.
 pub const IO_TIMEOUT: Duration = Duration::from_secs(5);
 /// rmcp dispatches every received request into a task. Keep at most one request
 /// awaiting its response write so pipelining cannot accumulate queued results.
@@ -347,7 +351,7 @@ where
                 return Some(message);
             }
             self.deadline
-                .get_or_insert_with(|| Instant::now() + IO_TIMEOUT);
+                .get_or_insert_with(|| Instant::now() + FRAME_TIMEOUT);
         }
     }
     async fn close(&mut self) -> io::Result<()> {

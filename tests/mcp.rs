@@ -1,6 +1,6 @@
 //! Actual compiled-binary MCP journeys. Plans/check claims are synthetic fixtures;
 //! these tests verify the local planning protocol, not Fusion or agent execution.
-use agent_orchestrator::mcp::{BoundedTransport, FRAME_LIMIT, RECORD_LIMIT};
+use agent_orchestrator::mcp::{BoundedTransport, FRAME_LIMIT, FRAME_TIMEOUT, RECORD_LIMIT};
 use rmcp::{
     RoleClient, ServiceExt,
     model::{
@@ -339,18 +339,19 @@ async fn eof_unknown_process_arguments_and_incomplete_frame_timeout_exit_cleanly
     stdin.write_all(b"{").await.unwrap();
     let started = tokio::time::Instant::now();
     assert!(
-        !timeout(Duration::from_secs(10), child.wait())
+        !timeout(FRAME_TIMEOUT + Duration::from_secs(4), child.wait())
             .await
             .unwrap()
             .unwrap()
             .success()
     );
-    assert!(started.elapsed() >= Duration::from_secs(4));
+    assert!(started.elapsed() >= FRAME_TIMEOUT - Duration::from_secs(1));
+    assert!(started.elapsed() < FRAME_TIMEOUT + Duration::from_secs(3));
     drop(stdin);
 }
 
 #[tokio::test(flavor = "current_thread")]
-async fn initialized_session_partial_frame_uses_five_second_deadline() {
+async fn initialized_session_partial_frame_uses_fifteen_second_deadline() {
     let mut child = raw_child();
     let mut stdin = child.stdin.take().unwrap();
     let mut stdout = BufReader::new(child.stdout.take().unwrap());
@@ -391,13 +392,13 @@ async fn initialized_session_partial_frame_uses_five_second_deadline() {
         .await
         .unwrap();
     let started = tokio::time::Instant::now();
-    let status = timeout(Duration::from_secs(9), child.wait())
+    let status = timeout(FRAME_TIMEOUT + Duration::from_secs(4), child.wait())
         .await
         .expect("incomplete initialized-session frame did not time out")
         .unwrap();
     assert!(!status.success());
-    assert!(started.elapsed() >= Duration::from_secs(4));
-    assert!(started.elapsed() < Duration::from_secs(8));
+    assert!(started.elapsed() >= FRAME_TIMEOUT - Duration::from_secs(1));
+    assert!(started.elapsed() < FRAME_TIMEOUT + Duration::from_secs(3));
 }
 
 #[tokio::test(flavor = "current_thread")]
@@ -464,13 +465,13 @@ async fn cancelled_receive_keeps_partial_bytes_and_original_deadline() {
             .is_err()
     );
     assert!(
-        timeout(Duration::from_secs(5), transport.receive())
+        timeout(FRAME_TIMEOUT + Duration::from_secs(1), transport.receive())
             .await
             .unwrap()
             .is_none()
     );
-    assert!(started.elapsed() >= Duration::from_secs(4));
-    assert!(started.elapsed() < Duration::from_secs(6));
+    assert!(started.elapsed() >= FRAME_TIMEOUT - Duration::from_secs(1));
+    assert!(started.elapsed() < FRAME_TIMEOUT + Duration::from_secs(2));
 }
 
 struct StalledWriter;

@@ -47,12 +47,13 @@ escaping around bounded raw records.
 Malformed/duplicate/oversized transport frames end the session without echoing input.
 Invalid tool records return tool errors, allowing subsequent valid calls.
 
-Initialization has a 15-second timeout. Partial input frames and output writes have
-5-second timeouts; an initialized idle session may wait for a new request. EOF ends
-the session. The transport allows one outstanding request at a time, bounds notification
-tasks, and serializes a response only while holding its single output permit. These
-aggregate limits and stalled-I/O paths pass Windows debug/release tests and independent
-review. Current hosted cross-platform CI still needs to verify the pushed revision.
+Initialization has a 15-second timeout. A partial input frame has a 15-second absolute
+deadline, and output writes have a 5-second timeout. An initialized idle session may wait
+for a new request. EOF ends the session. The transport allows one outstanding request at
+a time, bounds notification tasks, and serializes a response only while holding its single
+output permit. These aggregate limits and stalled-I/O paths pass Windows debug/release
+tests, and independent review found the deadline adjustment preserves the resource bounds.
+Current hosted cross-platform CI still needs to verify the updated revision.
 Local process permissions still belong to the host. No HTTP/OAuth guarantees
 are claimed for this stdio interface.
 

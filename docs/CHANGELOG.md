@@ -6,9 +6,11 @@ Adds a separately built local Rust stdio MCP facade over the deterministic plann
 kernel. It exposes six bounded planning, workflow-validation and routing tools and does not
 execute agents, access the filesystem or authorize external actions. Adds a declarative
 JSON role/profile/skill mapping and quality-gate authoring schema with validation in the
-Rust CLI/MCP. Windows debug/release tests and independent source/security review pass;
-cross-platform hosted CI and ChatGPT web E2E remain pending. This is not yet a release or
-a remote ChatGPT endpoint. See [MCP scope and remaining verification](MCP.md).
+Rust CLI/MCP. Inbound frames are capped at 8 MiB with a 15-second completion deadline;
+output writes remain capped at 5 seconds. Windows debug/release tests and independent
+review of the deadline adjustment pass; current hosted cross-platform CI and ChatGPT web
+E2E remain pending. This is not yet a release or a remote ChatGPT endpoint.
+See [MCP scope and remaining verification](MCP.md).
 
 ## 0.3.0 — 3 October 2026
 Adds a stateless Rust task-planning kernel: dependency validation, bounded work-wave
