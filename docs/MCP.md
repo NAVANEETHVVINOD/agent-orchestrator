@@ -53,7 +53,11 @@ for a new request. EOF ends the session. The transport allows one outstanding re
 a time, bounds notification tasks, and serializes a response only while holding its single
 output permit. These aggregate limits and stalled-I/O paths pass Windows debug/release
 tests, and independent review found the deadline adjustment preserves the resource bounds.
-Current hosted cross-platform CI still needs to verify the updated revision.
+Earlier hosted Linux debug/release runs failed in the invalid-record MCP subprocess
+journey. The tests now label each invalid probe, and CI serializes this subprocess-heavy
+suite to reduce runner contention without changing assertions. Local serial Windows debug
+and release suites pass; hosted Linux validation of this correction is pending. Do not
+treat the hosted gate as passed yet.
 Local process permissions still belong to the host. No HTTP/OAuth guarantees
 are claimed for this stdio interface.
 

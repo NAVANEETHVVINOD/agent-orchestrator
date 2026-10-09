@@ -37,7 +37,7 @@ async fn client() -> Client {
     )
     .await
     .unwrap()
-    .unwrap()
+    .unwrap_or_else(|error| panic!("MCP client initialization failed: {error:?}"))
 }
 async fn call(client: &Client, name: &str, arguments: Value) -> rmcp::model::CallToolResult {
     timeout(
@@ -49,7 +49,7 @@ async fn call(client: &Client, name: &str, arguments: Value) -> rmcp::model::Cal
     )
     .await
     .unwrap()
-    .unwrap()
+    .unwrap_or_else(|error| panic!("MCP tool `{name}` transport failed: {error:?}"))
 }
 async fn good(client: &Client, name: &str, arguments: Value) -> Value {
     let result = call(client, name, arguments).await;
@@ -229,7 +229,7 @@ async fn sdk_client_initializes_lists_all_tools_and_completes_review_fix_accepta
 #[tokio::test(flavor = "current_thread")]
 async fn bad_raw_records_arguments_and_unknown_tools_are_rejected_without_losing_session() {
     let client = client().await;
-    for arguments in [
+    for (case, arguments) in [
         json!({"plan_json":"{\"revision\":0,\"revision\":1}"}),
         json!({"plan_json":"{\"revision\":0,\"revis\\u0069on\":1}"}),
         json!({"plan_json":"{"}),
@@ -237,10 +237,26 @@ async fn bad_raw_records_arguments_and_unknown_tools_are_rejected_without_losing
         json!({"plan_json":" ".repeat(RECORD_LIMIT+1)}),
         json!({"plan_json":plan().to_string(),"execute":"evil"}),
         json!({}),
-    ] {
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        let result = timeout(
+            LIMIT,
+            client.call_tool(
+                CallToolRequestParams::new("validate_plan".to_owned())
+                    .with_arguments(arguments.as_object().unwrap().clone()),
+            ),
+        )
+        .await
+        .unwrap()
+        .unwrap_or_else(|error| {
+            panic!("invalid argument case {case} closed the MCP transport: {error:?}")
+        });
         assert_eq!(
-            call(&client, "validate_plan", arguments).await.is_error,
-            Some(true)
+            result.is_error,
+            Some(true),
+            "invalid argument case {case} was not rejected as a tool result"
         );
     }
     let proposal = r#"{"format_version":1,"available_routes":["qa"],"minimum_score":0.5,"minimum_margin":0.1,"proposals":[{"route":"qa","score":0.699999999999999999999999999999}]}"#;

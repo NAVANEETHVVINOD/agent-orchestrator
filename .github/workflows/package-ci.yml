@@ -33,7 +33,7 @@ jobs:
         with:
           persist-credentials: false
       - run: rustup toolchain install 1.94.1 --profile minimal
-      - run: cargo +1.94.1 test --locked --lib --tests
+      - run: cargo +1.94.1 test --locked --lib --tests -- --test-threads=1
       - run: cargo +1.94.1 build --locked --release
   e2e:
     strategy:
@@ -48,7 +48,7 @@ jobs:
           persist-credentials: false
       - run: rustup toolchain install 1.94.1 --profile minimal
       - run: cargo +1.94.1 test --locked --release --test cli
-      - run: cargo +1.94.1 test --locked --release --test mcp
+      - run: cargo +1.94.1 test --locked --release --test mcp -- --test-threads=1
       - run: cargo +1.94.1 run --locked --release -- validate-package --root .
   final-gate:
     if: always()

@@ -8,8 +8,10 @@ execute agents, access the filesystem or authorize external actions. Adds a decl
 JSON role/profile/skill mapping and quality-gate authoring schema with validation in the
 Rust CLI/MCP. Inbound frames are capped at 8 MiB with a 15-second completion deadline;
 output writes remain capped at 5 seconds. Windows debug/release tests and independent
-review of the deadline adjustment pass; current hosted cross-platform CI and ChatGPT web
-E2E remain pending. This is not yet a release or a remote ChatGPT endpoint.
+review of the deadline adjustment pass. Earlier hosted Linux runs failed in an MCP
+subprocess error-path journey; this revision serializes those process-heavy test cases and
+adds case-level diagnostics. Hosted Linux validation of that correction is pending, as is
+ChatGPT web E2E. This is not yet a release or remote ChatGPT endpoint.
 See [MCP scope and remaining verification](MCP.md).
 
 ## 0.3.0 — 3 October 2026
