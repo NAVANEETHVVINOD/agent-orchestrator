@@ -1,4 +1,6 @@
-use agent_orchestrator::{Result, gate, package, planning, read_bounded, routing, strict_json};
+use agent_orchestrator::{
+    Result, gate, package, planning, read_bounded, routing, strict_json, workflow,
+};
 use serde_json::{Value, json};
 use std::{collections::HashMap, path::Path};
 
@@ -22,6 +24,7 @@ fn run() -> Result<Output> {
             "route-proposal" => ["--input"].as_slice(),
             "project-gate" => ["--project-root", "--report", "--stage", "--snapshot"].as_slice(),
             "validate-plan" | "render-chart" => ["--input"].as_slice(),
+            "validate-workflow" => ["--input"].as_slice(),
             "next-wave" => ["--input", "--runtime"].as_slice(),
             "apply-transition" => ["--input", "--event"].as_slice(),
             _ => return Err("Unknown command".into()),
@@ -46,6 +49,7 @@ fn run() -> Result<Output> {
         "validate-package" => package::validate(Path::new(needed("--root")?)).map(Output::Json),
         "route-proposal" => routing::evaluate(&record(needed("--input")?)?).map(Output::Json),
         "validate-plan" => planning::validate(&record(needed("--input")?)?).map(Output::Json),
+        "validate-workflow" => workflow::validate(&record(needed("--input")?)?).map(Output::Json),
         "next-wave" => {
             planning::next_wave(&record(needed("--input")?)?, &record(needed("--runtime")?)?)
                 .map(Output::Json)

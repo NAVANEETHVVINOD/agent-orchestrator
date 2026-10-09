@@ -6,6 +6,16 @@ work and use the project's task-artifact convention. User-facing deliverables be
 in the requested output location. Do not put credentials, personal records or full logs
 in the ledger.
 
+When the user explicitly requests a goal, use the available native goal API and link
+this ledger. Never create goals for ordinary tasks without that request. Discover the
+actual schema: a whole-goal status API does not imply per-task checkboxes, objective
+editing or background updates. Keep unsupported host features explicit.
+
+Honor requested display symbols: blank = pending, `-` = working/review, `✓` = verified
+acceptance, `✗` = concrete failure/blocker with reason and next action. Retain richer
+internal states. A pending dependency is not an error. Tick only after actual artifact
+inspection and applicable review/QA. Use text/symbols alongside any status colors.
+
 | Item | Owner | Depends on | State | Output/evidence | Review / QA | Next action |
 | --- | --- | --- | --- | --- | --- | --- |
 | Architecture question | explorer | Project scope | planned | Awaiting source trace | unverified | Dispatch scoped question |

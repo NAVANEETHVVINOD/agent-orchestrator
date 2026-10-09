@@ -122,6 +122,60 @@ fn route_cli_exact_boundaries_and_untrusted_inputs() {
     fs::write(&input, vec![b' '; 1024 * 1024 + 1]).unwrap();
     blocked(run(&["route-proposal", "--input", path]));
 }
+
+#[test]
+fn workflow_cli_validates_bundled_roles_and_rejects_untrusted_records() {
+    let f = Fixture::new();
+    let input = f.0.join("workflow.json");
+    let path = input.to_str().unwrap();
+    fs::write(&input, include_str!("../examples/project-workflow.json")).unwrap();
+    let result = success(run(&["validate-workflow", "--input", path]));
+    assert_eq!(result["record_validation"], "passed");
+    assert_eq!(result["role_count"], 14);
+    assert_eq!(result["tools_installed"], false);
+    assert_eq!(result["permissions_granted"], false);
+
+    let sample = include_str!("../examples/project-workflow.json")
+        .replace("\"format_version\": 1,", "\"format_version\": 1.0,");
+    fs::write(&input, sample).unwrap();
+    success(run(&["validate-workflow", "--input", path]));
+
+    let mut unicode_name: Value =
+        serde_json::from_str(include_str!("../examples/project-workflow.json")).unwrap();
+    unicode_name["project"]["name"] = json!("界".repeat(120));
+    fs::write(&input, unicode_name.to_string()).unwrap();
+    success(run(&["validate-workflow", "--input", path]));
+    unicode_name["project"]["name"] = json!("界".repeat(121));
+    fs::write(&input, unicode_name.to_string()).unwrap();
+    blocked(run(&["validate-workflow", "--input", path]));
+
+    let mut padded_name: Value =
+        serde_json::from_str(include_str!("../examples/project-workflow.json")).unwrap();
+    padded_name["project"]["name"] = json!(" padded ");
+    fs::write(&input, padded_name.to_string()).unwrap();
+    blocked(run(&["validate-workflow", "--input", path]));
+
+    let mut ecma_whitespace_name: Value =
+        serde_json::from_str(include_str!("../examples/project-workflow.json")).unwrap();
+    ecma_whitespace_name["project"]["name"] = json!("\u{0085}name\u{0085}");
+    fs::write(&input, ecma_whitespace_name.to_string()).unwrap();
+    success(run(&["validate-workflow", "--input", path]));
+
+    for invalid in [
+        r#"{"format_version":1,"format_version":1}"#,
+        r#"{"format_version":1,"project":{},"roles":[],"required_quality_gates":[],"run":"whoami"}"#,
+    ] {
+        fs::write(&input, invalid).unwrap();
+        blocked(run(&["validate-workflow", "--input", path]));
+    }
+    blocked(run(&[
+        "validate-workflow",
+        "--input",
+        path,
+        "--extra",
+        "yes",
+    ]));
+}
 #[test]
 fn project_cli_real_git_report_and_source_change() {
     let f = Fixture::new();

@@ -1,8 +1,10 @@
 pub mod gate;
+pub mod mcp;
 pub mod package;
 pub mod planning;
 pub mod routing;
 pub mod strict_json;
+pub mod workflow;
 
 use sha2::{Digest, Sha256};
 use std::{fs::File, io::Read, path::Path};

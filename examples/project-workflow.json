@@ -1,0 +1,34 @@
+{
+  "format_version": 1,
+  "project": {
+    "id": "sample-rust-service",
+    "name": "Example Rust service",
+    "languages": ["rust"]
+  },
+  "roles": {
+    "business-analysis": { "profile": "business_analyst", "skills": ["business-operations"] },
+    "capability-research": { "profile": "capability_researcher", "skills": ["capability-manager", "plugin-safety-review"] },
+    "documentation": { "profile": "documentation_maintainer", "skills": ["project-documentation"] },
+    "source-exploration": { "profile": "evidence_explorer", "skills": [] },
+    "evidence-review": { "profile": "evidence_reviewer", "skills": ["project-evidence-review"] },
+    "pull-request-audit": { "profile": "pr_auditor", "skills": ["project-release"] },
+    "project-planning": { "profile": "project_planner", "skills": ["project-discovery", "global-orchestrator"] },
+    "quality-assurance": { "profile": "qa_executor", "skills": ["project-qa"] },
+    "release-management": { "profile": "release_engineer", "skills": ["project-release"] },
+    "implementation": { "profile": "scoped_implementer", "skills": [] },
+    "security-review": { "profile": "security_auditor", "skills": ["project-security"] },
+    "solution-architecture": { "profile": "solution_architect", "skills": ["project-design"] },
+    "user-experience": { "profile": "ux_planner", "skills": ["project-design"] },
+    "verification-review": { "profile": "verification_reviewer", "skills": ["project-evidence-review"] }
+  },
+  "required_quality_gates": [
+    "requirements-confirmed",
+    "independent-review",
+    "evidence-review",
+    "security-review",
+    "end-to-end-qa",
+    "documentation-update",
+    "local-checks-before-push",
+    "hosted-ci-before-merge"
+  ]
+}

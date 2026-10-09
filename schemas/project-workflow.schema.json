@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/NAVANEETHVVINOD/agent-orchestrator/main/schemas/project-workflow.schema.json",
+  "title": "Agent Orchestrator project workflow",
+  "description": "Declarative role-to-profile/skill mapping and required quality-gate names. This schema is an authoring aid; the Rust validator is authoritative and does not discover runtime capabilities, install tools, grant permissions or dispatch agents.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format_version", "project", "roles", "required_quality_gates"],
+  "properties": {
+    "format_version": { "const": 1 },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "languages"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120, "pattern": "^\\S(?:[\\s\\S]*\\S)?(?![\\s\\S])$" },
+        "languages": { "type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 32, "pattern": "^[a-z][a-z0-9_-]*(?![\\s\\S])$" } }
+      }
+    },
+    "roles": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 64,
+      "propertyNames": { "$ref": "#/$defs/id" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["profile", "skills"],
+        "properties": {
+          "profile": { "$ref": "#/$defs/capability-ref" },
+          "skills": { "type": "array", "maxItems": 16, "uniqueItems": true, "items": { "$ref": "#/$defs/capability-ref" } }
+        }
+      }
+    },
+    "required_quality_gates": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": { "enum": ["requirements-confirmed", "independent-review", "evidence-review", "security-review", "end-to-end-qa", "documentation-update", "local-checks-before-push", "hosted-ci-before-merge", "accessibility-review", "privacy-review", "release-readiness"] },
+      "allOf": [
+        { "contains": { "const": "requirements-confirmed" } },
+        { "contains": { "const": "independent-review" } },
+        { "contains": { "const": "evidence-review" } },
+        { "contains": { "const": "security-review" } },
+        { "contains": { "const": "end-to-end-qa" } },
+        { "contains": { "const": "documentation-update" } },
+        { "contains": { "const": "local-checks-before-push" } },
+        { "contains": { "const": "hosted-ci-before-merge" } }
+      ]
+    }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 64, "pattern": "^[a-z][a-z0-9_-]*(?![\\s\\S])$" },
+    "capability-ref": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:@-]*(/[A-Za-z0-9][A-Za-z0-9_.:@-]*)*(?![\\s\\S])$", "description": "A profile or skill identifier; this syntax check does not prove the host has loaded or authorized it." }
+  }
+}
