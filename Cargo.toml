@@ -18,7 +18,7 @@ path = "src/bin/orchestrator-mcp.rs"
 
 [dependencies]
 serde_json = { version = "=1.0.151", features = ["arbitrary_precision"] }
-sha2 = "=0.11.0"
+sha2 = "=0.11.1"
 toml = "=1.1.6"
 rust_decimal = { version = "=1.43.0", default-features = false, features = ["std"] }
 regex = "=1.13.1"
