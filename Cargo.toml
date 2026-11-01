@@ -23,11 +23,11 @@ toml = "=1.1.6"
 rust_decimal = { version = "=1.43.0", default-features = false, features = ["std"] }
 regex = "=1.13.1"
 walkdir = "=2.5.0"
-rmcp = { version = "=3.5.0", default-features = false, features = ["server"] }
+rmcp = { version = "=3.8.0", default-features = false, features = ["server"] }
 tokio = { version = "=1.53.2", features = ["rt", "macros", "io-std", "io-util", "time"] }
 
 [dev-dependencies]
-rmcp = { version = "=3.5.0", default-features = false, features = ["client", "transport-child-process"] }
+rmcp = { version = "=3.8.0", default-features = false, features = ["client", "transport-child-process"] }
 
 [profile.release]
 overflow-checks = true
